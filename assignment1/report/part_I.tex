@@ -1,6 +1,6 @@
 \section{Part I: Data Cleaning and Preprocessing (for dataset A)}
 \subsection{Detecting Issues in the dataset}
-For this part of the assignment, the dataset had to be analyzed first to detect issues such as missing values and outliers. There was found to be a 124053 missing values and 
+For this part of the assignment, the dataset had to be analyzed first to detect issues such as missing values and outliers. There was found to be a 124053 missing values, however, before replacing the missing values with the mean, the outliers had to be checked first since the mean would be effected by the outliers. To find the outliers, the standard deviation of the values was determined first and used to find values that vary by more than 3 standard deviations. There were over 14000 data points that vary from the features mean by over 3 standard deviations. Those outlier values were replace with the mean of each feature. Final step was to replace all the missing values with the mean after that outliers were taken care of. 
 
 
 \subsection{Fixing Issues}
