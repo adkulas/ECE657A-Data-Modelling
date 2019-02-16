@@ -37,17 +37,17 @@ Richard Ozara -\texttt{UWID:20801583}}
 
 \section{Project Description}
 
-The proposed project is to solve a problem presented by the company Santander. Santander is Bank that originated in Spain. Since 2013 they have been serving customers in northeastern North America. Santander mentions in the competition description that their most common problems are binary classification problems. The main goal for the competition is to predict which customers will make a specific transaction in the future, irrespective of money transacted. The problem presented by this challenge is a binary classification problem.
+The proposed project is to solve a problem presented by the company Santander. Santander is Bank that originating in Spain. Since 2013 they have been serving customers in northeastern North America. Santander mentions in the competition description that their most common problems are binary classification problems. The main goal for the competition is to predict which customers will make a specific transaction in the future, irrespective of money transacted. The problem presented by this challenge is a binary classification problem.
 
 \section{Research papers review}
 % A comprehensive review of 3 to 4 well-recognized research papers.At least a few sentences for each paper
 \subsection{Using DEA-neural network approach to solve binary classification problems}
-The paper proposes a new hybrid neural network for binary classification problem. The classification function is used in the neural network supervised learning phase while Gaussian Radial Basis Function (GRBF) is implemented in the neural network unsupervised learning phase. The advantage of this proposed model over the existing RBFN-DEA model for solving classification problems, is that it has low CPU time and also it can be applied to solve classification problems with negative data~\cite{ref_article1}.
+The paper proposes a new hybrid neural network for binary classification problem. The classification function is used in the neural network supervised learning phase while Gaussian Radial Basis Function (GRBF) is implemented in the neural network unsupervised learning phase. The advantage of this proposed model over the existing RBFN-DEA model for solving classification problems is that it has low CPU time and also it can be applied to solve classification problems with negative data~\cite{ref_article1}.
 
 
 
 \subsection{Adam: A Method for Stochastic Optimization}
-This paper introduces a new algorithm for first-order gradient-based optimization of stochastic objective functions \cite{ref_article2}. It claims the method is straightforward to implement, is computationally efficient and has little memory requirements. Adam converges quickly and is less susceptible to becoming stuck in local minimas than conventional methods.
+This paper introduces a new algorithm for first-order gradient-based optimization of stochastic objective functions ~\cite{ref_article2}. It claims the method is straightforward to implement, is computationally efficient and has little memory requirements. Adam converges quickly and is less susceptible to becoming stuck in local minimas than conventional methods.
 
 
 \subsection{Handling binary classification problems with a priority class by using Support Vector Machines}
@@ -55,29 +55,29 @@ The paper introduces a post-processing technique for Support Vector Machine (SVM
 
 %A paragraph to discuss the expected challenges / difficulties.
 \section{Expected challenges/difficulties}
-We expect to encounter a few challenges in the process of building a model to solve this problem. First, it will be challenging to become familiar with the field and common techniques and algorithms used. We will need to learn how the algorithms work and how to implement them using python. Another challenge will be that the data has been anonymized. This could make it harder to interpret the data and engineer new features. A common problem that is encountered when creating ML models is over-fitting. We will need to use techniques to identify when model are being over-fit and implement practices to reduce this issue. Computation and data size could also result in an issue. Although this dataset is not very large compared to others, some algorithms take many cycles to converge. This could be a problem when tuning hyper parameters. Our inexperience may result in using a lot of time to experiment with parameters while not fully understanding their impact. Grid search approaches may need to be used to try many combinations when complexity grows beyond our current skill level.
+We expect to encounter a few challenges in the process of building a model to solve this problem. First, it will be challenging to become familiar with the field and common techniques and algorithms used. We will need to learn how the algorithms work and how to implement them using python. Another challenge will be that the data has been anonymized. This could make it harder to interpret the data and engineer new features. A common problem that is encountered when creating ML models is over-fitting. We will need to use techniques to identify when models are being over-fit and implement practices to reduce this issue. Computation and data size could also result in an issue. Although this dataset is not very large compared to others, some algorithms take many cycles to converge. This could be a problem when tuning hyperparameters. Our inexperience may result in using a lot of time to experiment with parameters while not fully understanding their impact. Grid search approaches may need to be used to try many combinations when complexity grows beyond our current skill level.
 
 
-\section{Sketch of the approach}
 % A sketch of your planned approach, algorithms, preprocessing methods, evaluation metrics, etc.
-Our approach to finding a model to solve the presented problem will follow a logical format used by many others in what could be a called a "common datascience workflow" \cite{ref_url2}. The list of steps we intend to follow are:
+\section{Sketch of the approach}
+Our approach to finding a model to solve the presented problem will follow a logical format used by many others in what could be a called a "common data science workflow" \cite{ref_url2}. The list of steps we intend to follow are:
 
 \begin{enumerate}
 \item Data cleaning
 \item Data exploration and visualization
 \item Implementation of simple algorithms to set a baseline performance benchmark
-\item Implement supervised machine learning  classification algorithms that are more specifically tailored to the dataset and problem space.
-\item Perform cross validation and cross reference with kaggle leader board scores. 
-\item Tune hyper parameters of best performing models to improve performance
+\item Implement supervised machine learning classification algorithms that are more specifically tailored to the dataset and problem space.
+\item Perform cross-validation and cross-reference with kaggle leader board scores. 
+\item Tune hyperparameters of best performing models to improve performance
 \end{enumerate}
 
-During the data cleaning phase we will be analyzing the data and searching for inconsistencies and "problems" with the dataset. These problems could be missing values, outliers, or unscaled data unsuitable for certain machine learning models. \\
-During data exploration and visualization we will try to determine relevant features and see which features can provide the most information to aid in prediction. This step will include finding correlations between features and various plots and to visualize the data in various ways as to provide more insight.
+During the data cleaning phase, we will be analyzing the data and searching for inconsistencies and "problems" with the dataset. These problems could be missing values, outliers, or unscaled data unsuitable for certain machine learning models. \\
+During data exploration and visualization we will try to determine relevant features and see which features can provide the most information to aid in prediction. This step will include finding correlations between features and various plots and to visualize the data in various ways to provide more insight.
 Third, we will implement simple but effective machine learning models, such as logistic regression. These models will serve as a baseline to sanity check our more complex models later in the process. \\
 Complex algorithms will be attempted with the goal of learning about these new techniques as well as aiming to reach a higher score. Some of these more complex algorithms may include, XGBoost, random forests and neural networks. \\
 In step 5 we will use methods to improve the robustness of our models and avoid a common problem known as over-fitting. We want our model to generalize and perform well on the holdout test set which will not be presented until the competition closes. \\
-Lastly, we will tune the hyper parameters of the best performing models with the goal of improving performance as much as possible. \\
-We do not expect that the project will follow the ideal work flow exactly and there will be an iterative element to the process. We may need to cyclically return to previous steps as we learn new techniques and tools throughout the project.
+Lastly, we will tune the hyperparameters of the best performing models with the goal of improving performance as much as possible. \\
+We do not expect that the project will follow the ideal workflow exactly and there will be an iterative element to the process. We may need to cyclically return to previous steps as we learn new techniques and tools throughout the project.
 
 
 \section{Description of the dataset to be used}
