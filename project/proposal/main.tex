@@ -1,0 +1,122 @@
+% This is samplepaper.tex, a sample chapter demonstrating the
+% LLNCS macro package for Springer Computer Science proceedings;
+% Version 2.20 of 2017/10/04
+%
+\documentclass{llncs}
+%
+\usepackage{graphicx}
+\usepackage{hyperref}
+%\renewcommand{\thesubsection}{\thesection.\Roman{subsection}}
+% Used for displaying a sample figure. If possible, figure files should
+% be included in EPS format.
+%
+% If you use the hyperref package, please uncomment the following line
+% to display URLs in blue roman font according to Springer's eBook style:
+% \renewcommand\UrlFont{\color{blue}\rmfamily}
+
+\begin{document}
+%
+\title{ECE 657A: Project Proposal}
+%
+%\titlerunning{Abbreviated paper title}
+% If the paper title is too long for the running head, you can set
+% an abbreviated paper title here
+%
+\author{Group 10 \\ Adam Kulas -\texttt{UWID: 20302000}\and
+Ammar Ahmed -\texttt{UWID: 20734898}\and
+Richard Ozara -\texttt{UWID:20801583}}
+%
+%\authorrunning{F. Author et al.}
+% First names are abbreviated in the running head.
+% If there are more than two authors, 'et al.' is used.
+%
+\institute{University of Waterloo\\ Department of Electrical and Computer Engineering}
+%
+\maketitle              % typeset the header of the contribution
+
+
+\section{Project Description}
+
+The proposed project is to solve a problem presented by the company Santander. Santander is Bank that originated in Spain. Since 2013 they have been serving customers in northeastern North America. Santander mentions in the competition description that their most common problems are binary classification problems. The main goal for the competition is to predict which customers will make a specific transaction in the future, irrespective of money transacted. The problem presented by this challenge is a binary classification problem.
+
+\section{Research papers review}
+% A comprehensive review of 3 to 4 well-recognized research papers.At least a few sentences for each paper
+\subsection{Using DEA-neural network approach to solve binary classification problems}
+The paper proposes a new hybrid neural network for binary classification problem. The classification function is used in the neural network supervised learning phase while Gaussian Radial Basis Function (GRBF) is implemented in the neural network unsupervised learning phase. The advantage of this proposed model over the existing RBFN-DEA model for solving classification problems, is that it has low CPU time and also it can be applied to solve classification problems with negative data~\cite{ref_article1}.
+
+
+
+\subsection{Adam: A Method for Stochastic Optimization}
+This paper introduces a new algorithm for first-order gradient-based optimization of stochastic objective functions \cite{ref_article2}. It claims the method is straightforward to implement, is computationally efficient and has little memory requirements. Adam converges quickly and is less susceptible to becoming stuck in local minimas than conventional methods.
+
+
+\subsection{Handling binary classification problems with a priority class by using Support Vector Machines}
+The paper introduces a post-processing technique for Support Vector Machine (SVM) algorithms for binary classification problems (to handle bi-classification problems). The paper claims that the technique has been tested on eleven standard UCI datasets and SVM satisfied the goal for which it was designed for and performed comparable or better than other state-of-the-art SVM algorithms while maintaining other usual metrics ~\cite{ref_article4}.
+
+%A paragraph to discuss the expected challenges / difficulties.
+\section{Expected challenges/difficulties}
+We expect to encounter a few challenges in the process of building a model to solve this problem. First, it will be challenging to become familiar with the field and common techniques and algorithms used. We will need to learn how the algorithms work and how to implement them using python. Another challenge will be that the data has been anonymized. This could make it harder to interpret the data and engineer new features. A common problem that is encountered when creating ML models is over-fitting. We will need to use techniques to identify when model are being over-fit and implement practices to reduce this issue. Computation and data size could also result in an issue. Although this dataset is not very large compared to others, some algorithms take many cycles to converge. This could be a problem when tuning hyper parameters. Our inexperience may result in using a lot of time to experiment with parameters while not fully understanding their impact. Grid search approaches may need to be used to try many combinations when complexity grows beyond our current skill level.
+
+
+\section{Sketch of the approach}
+% A sketch of your planned approach, algorithms, preprocessing methods, evaluation metrics, etc.
+Our approach to finding a model to solve the presented problem will follow a logical format used by many others in what could be a called a "common datascience workflow" \cite{ref_url2}. The list of steps we intend to follow are:
+
+\begin{enumerate}
+\item Data cleaning
+\item Data exploration and visualization
+\item Implementation of simple algorithms to set a baseline performance benchmark
+\item Implement supervised machine learning  classification algorithms that are more specifically tailored to the dataset and problem space.
+\item Perform cross validation and cross reference with kaggle leader board scores. 
+\item Tune hyper parameters of best performing models to improve performance
+\end{enumerate}
+
+During the data cleaning phase we will be analyzing the data and searching for inconsistencies and "problems" with the dataset. These problems could be missing values, outliers, or unscaled data unsuitable for certain machine learning models. \\
+During data exploration and visualization we will try to determine relevant features and see which features can provide the most information to aid in prediction. This step will include finding correlations between features and various plots and to visualize the data in various ways as to provide more insight.
+Third, we will implement simple but effective machine learning models, such as logistic regression. These models will serve as a baseline to sanity check our more complex models later in the process. \\
+Complex algorithms will be attempted with the goal of learning about these new techniques as well as aiming to reach a higher score. Some of these more complex algorithms may include, XGBoost, random forests and neural networks. \\
+In step 5 we will use methods to improve the robustness of our models and avoid a common problem known as over-fitting. We want our model to generalize and perform well on the holdout test set which will not be presented until the competition closes. \\
+Lastly, we will tune the hyper parameters of the best performing models with the goal of improving performance as much as possible. \\
+We do not expect that the project will follow the ideal work flow exactly and there will be an iterative element to the process. We may need to cyclically return to previous steps as we learn new techniques and tools throughout the project.
+
+
+\section{Description of the dataset to be used}
+% Description of datasets that you plan to use. It should include a link and a brief description about the properties of the data, such as its features, instances, preprocessing techniques, etc. If you are going to use your own dataset, then a description of its source and preprocessing steps is needed.
+The dataset that will be used in this project is provided by Santander and can be downloaded at the following website: \\ \url{https://www.kaggle.com/c/santander-customer-transaction-prediction/}.
+There are two main files: train.csv which contains the training set and the test.csv which contains the test set. The test set contains some rows which are not included in scoring~\cite{ref_url1}. The size of the train.csv is 200k x 201 and for the tain.csv is 200k x 202. The train.csv attributes are the binary target column, string \texttt{ID\char`_code} column, and the numeric feature variables while the test.csv contains the string \texttt{ID\char`_code} and the numeric feature variables, so the task is to predict the value of target column in the test set.
+
+
+
+
+%
+% ---- Bibliography ----
+%
+\bibliographystyle{splncs04}
+\begin{thebibliography}{8}
+
+\bibitem{ref_url1}
+Kaggle Homepage, \url{https://www.kaggle.com/c/santander-customer-transaction-prediction/data}. Last accessed 15 Feb 2019
+
+\bibitem{ref_article1}
+F. H. Lotfi, G. R. Jahanshahloo, S. Givehchi, and M. Vaez-Ghasemi, “Using DEA-neural network approach to solve binary classification problems,” Data Envel. Anal. Decis. Sci., vol. 2013, pp. 1–12, 2013.
+
+\bibitem{ref_article2}
+Kingma, Diederik P., and Jimmy Ba. "Adam: A method for stochastic optimization." arXiv preprint arXiv:1412.6980 (2014).
+
+\bibitem{ref_article3}
+Chen, Tianqi, and Carlos Guestrin. "Xgboost: A scalable tree boosting system." Proceedings of the 22nd acm sigkdd international conference on knowledge discovery and data mining. ACM, 2016.
+
+\bibitem{ref_article4}
+Gonzalez-Abril, Luis, et al. "Handling binary classification problems with a priority class by using Support Vector Machines." Applied Soft Computing 61 (2017): 661-669.
+
+\bibitem{ref_url2}
+A. Tandel, “A Data Science Workflow,” 2017. [Online]. Available: https://towardsdatascience.com/a-data-science-workflow-26c3f05a010e. [Accessed: 15-Feb-2018].
+
+\bibitem{ref_article5} B.  Sch ̈olkopf,  R.  Herbrich,  and  A.  Smola.  A  generalized  representer  theorem.  In  D.  Helmbold  andB. Williamson, editors,Computational Learning Theory, volume 2111 of Lecture Notes in Computer Science,pages 416–426. Springer, 2001.
+
+\end{thebibliography}
+\end{document}
+
+
+
+
