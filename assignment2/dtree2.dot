@@ -1,0 +1,33 @@
+digraph Tree {
+node [shape=box, style="filled, rounded", color="black", fontname=helvetica] ;
+edge [fontname=helvetica] ;
+0 [label="nr.employed <= 5087.65\ngini = 0.196\nsamples = 2883\nvalue = [2566, 317]", fillcolor="#e58139df"] ;
+1 [label="pdays <= 12.5\ngini = 0.492\nsamples = 365\nvalue = [206, 159]", fillcolor="#e581393a"] ;
+0 -> 1 [labeldistance=2.5, labelangle=45, headlabel="True"] ;
+2 [label="month_oct <= 0.5\ngini = 0.347\nsamples = 85\nvalue = [19, 66]", fillcolor="#399de5b6"] ;
+1 -> 2 ;
+3 [label="gini = 0.311\nsamples = 78\nvalue = [15, 63]", fillcolor="#399de5c2"] ;
+2 -> 3 ;
+4 [label="gini = 0.49\nsamples = 7\nvalue = [4, 3]", fillcolor="#e5813940"] ;
+2 -> 4 ;
+5 [label="contact_telephone <= 0.5\ngini = 0.444\nsamples = 280\nvalue = [187, 93]", fillcolor="#e5813980"] ;
+1 -> 5 ;
+6 [label="gini = 0.464\nsamples = 241\nvalue = [153, 88]", fillcolor="#e581396c"] ;
+5 -> 6 ;
+7 [label="gini = 0.224\nsamples = 39\nvalue = [34, 5]", fillcolor="#e58139da"] ;
+5 -> 7 ;
+8 [label="month_mar <= 0.5\ngini = 0.118\nsamples = 2518\nvalue = [2360, 158]", fillcolor="#e58139ee"] ;
+0 -> 8 [labeldistance=2.5, labelangle=-45, headlabel="False"] ;
+9 [label="age <= 64.0\ngini = 0.111\nsamples = 2498\nvalue = [2350, 148]", fillcolor="#e58139ef"] ;
+8 -> 9 ;
+10 [label="gini = 0.11\nsamples = 2493\nvalue = [2348, 145]", fillcolor="#e58139ef"] ;
+9 -> 10 ;
+11 [label="gini = 0.48\nsamples = 5\nvalue = [2, 3]", fillcolor="#399de555"] ;
+9 -> 11 ;
+12 [label="euribor3m <= 1.767\ngini = 0.5\nsamples = 20\nvalue = [10, 10]", fillcolor="#e5813900"] ;
+8 -> 12 ;
+13 [label="gini = 0.444\nsamples = 15\nvalue = [10, 5]", fillcolor="#e581397f"] ;
+12 -> 13 ;
+14 [label="gini = 0.0\nsamples = 5\nvalue = [0, 5]", fillcolor="#399de5ff"] ;
+12 -> 14 ;
+}
