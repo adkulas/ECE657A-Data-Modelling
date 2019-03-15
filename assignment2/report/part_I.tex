@@ -11,20 +11,50 @@ For dividing the data-set(4119 samples), 80\% was used for training and 20\% for
 \subsection{Applying classification}
 %Figure~\ref{fig:fig1} shows the comparison between histogram plots of feature 9 and 24 before and after normalization. 
 
-Decision Tree (DT): The Depth of the tree was chosen as 3 for which the model performed more accurately without over-fitting. We first plotted the area under curve score (AUC score) against the tree depth. 
-
-If None, then nodes are expanded until all the leaves contain less than min\_samples\_split samples. The higher value of maximum depth causes over-fitting, and a lower value causes under-fitting\cite{ref_url1}.
+Decision Tree (DT):\\ The Depth of the tree was chosen as 3 for which the model performed more accurately without over-fitting. We first plotted the area under curve score (AUC score) against the tree depth (figure 1 below)
+\begin{figure}[!ht]
+ \centering
+\includegraphics[width=6.1in]{assignment2/1-3-DecisionTree_AUC.png}
+\caption{\label{fig:fig1}AUC score curve against tree depth}
+\end{figure}
+As it can be seen from the curve, the deeper the tree the higher the train AUC score but the test AUC score wont change a lot after tree depth of 3. This means that we get an overfitting case as our model will have a high AUC score (predicts the train data perfectly) for deeper tree depth but will fail to generalize and predict the test data. For this reason the tree depth was chose to be 3 for our model.
+If the depth of tree was not specified, by default, scikit-learn will keep expanding the nodes until all the leaves contain less than min\_samples\_split samples and as we saw in the graph below, the higher value of maximum depth causes over-fitting, and a lower value causes under-fitting\cite{ref_url1}.
 
 
 ID3, or Iternative Dichotomizer, was the first of three Decision Tree implementations developed by Ross Quinlan
 It builds a decision tree for the given data in a top-down fashion, starting from a set of objects and a specification of properties Resources and Information. each node of the tree, one property is tested based on maximizing information gain and minimizing entropy, and the results are used to split the object set. This process is recursively done until the set in a given sub-tree is homogeneous (i.e. it contains objects belonging to the same category). The ID3 algorithm uses a greedy search. It selects a test using the information gain criterion, and then never explores the possibility of alternate choices.
 
 CART stands for Classification and Regression Trees. It is characterized by the fact that it constructs binary trees, namely each internal node has exactly two outgoing edges. The splits are selected using the twoing criteria and the obtained tree is pruned by cost–complexity Pruning. CART can handle both numeric and categorical variables and it can easily handle outliers.
+\\
 
-Neural Network (NN): The neural network has three main layers: input, hidden, and output layers. The input layer is equal to the number of features in the training data (52 features). The output layer has a single node (outputs either 1 or 0). There is two main decisions to be made when tuning a neural network: first
+Random Forests (RF): \\
+The random forests classifier was built using the scikit-learn. The two main parameters that were considered here are the n\_estimator and tree depth. The n\_estimator simply represnts the number of trees in the model and tree depth is the depth of those tree. Similar to the approach described in the decision tree, AUC score was plotted against n\_estimator and tree depth to avoid any over-fitting cases. Figure~\ref{fig:fig2} shows the AUC scores for n\_estimator and figure~\ref{fig:fig3} shows the AUC scores for tree depth. 
+\begin{figure}[!ht]
+ \centering
+\includegraphics[width=6.1in]{assignment2/1-3-RandomForests_AUC(n_estimators).png}
+\caption{\label{fig:fig2}AUC score curve against n\_estimators}
+\end{figure}
 
-Random Forests (RF):ensembles for RF
+\begin{figure}[!ht]
+ \centering
+\includegraphics[width=6.1in]{assignment2/1-3-RandomForests_AUC(TreeDepth).png}
+\caption{\label{fig:fig3}AUC score curve against tree depth}
+\end{figure}
+
+\\
+
+Neural Network (NN): The neural network has three main layers: input, hidden, and output layers. The input layer is equal to the number of features in the training data (46 features). The output layer has a single node (outputs either 1 or 0). The neural network has many hyper-parameters which means the easiest way of choosing those parametrs would be through using the gridsearch built-in function that would return the best parameters from the parameter space list provided. When it comes to choosing the number of hidden layers and neurons in each layer, there is no rule of thumb. However, to avoid overfitting in neural network, the number of neurons in the hidden layers should not exceed the number of the input layers, in our case, it should not exceed 46. 
+
+
+The perceptron receives inputs, multiplies them by some weight, and then passes them into an activation function to produce an output. There are many possible activation functions to choose from, such as the logistic function, a trigonometric function, a step function etc. We also make sure to add a bias to the perceptron, this avoids issues where all inputs could be equal to zero (meaning no multiplicative weight would have an effect).
+Once we have the output we can compare it to a known label and adjust the weights accordingly (the weights usually start off with random initialization values). We keep repeating this process until we have reached a maximum number of allowed iterations, or an acceptable error rate.
+\\
 \subsection{Create a few plots of your model on the test data, two of the data dimensions at a time,indicating the predicted elements of each class using different colors or shapes. You may need to try plotting various pairs of dimensions to see which provide some interesting result. Be sure to label your axis and legend. Why is separation better on some plots than others}
+
+\\
+
+
+
 
 %Figure~\ref{fig:fig1} shows the comparison between histogram plots of feature 9 and 24 before and after normalizat
 
