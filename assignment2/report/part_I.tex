@@ -83,7 +83,14 @@ Figure~\ref{fig:fig5} shows the comparison between true/false positive/negative 
 \\
 
 \subsection{ Fun/Bonus: attempt at least one method to tackle the discrepancy in the size of the classes (imbalanced data)}
- I think to tackle the issue of imbalanced data,precision should be used when analyzing best threshold for each algorithm using ROC/AUC .As we know , AUC uses TPR(True positive rate) on Y axis and FPR(False positive rate ) on X axis. So replacing the FPR with precision on the X axis of the AUC graph might be the way to go.
+There are several methods to handle imbalanced data (https://elitedatascience.com/imbalanced-classes)
+1 Up-sample Minority Class(attempted)
+2 Down-sample Majority Class(attempted)
+3 Change Your Performance Metric(attempted)
+4 Penalize Algorithms (Cost-Sensitive Training)
+5 Use Tree-Based Algorithms
+Change Your Performance Metric
+ I think to tackle the issue of imbalanced data,precision  recall curve should be used when analyzing each algorithms performance  .As we know , ROC/AUC uses TPR(True positive rate) on Y axis and FPR(False positive rate ) on X axis. So replacing the FPR with precision on the X axis of the AUC graph might be the way to go.
  Precision=(TP/TP +FP) FPR= (FP/TN+FP)
  Since there were lots of samples that were Negatives(No's) relative to the number of Positives(Yes's) samples, then precision might be more useful than false positive rate . This is because precision does not include the number of True Negatives in its calculation, and is not affected by imbalance.
 
