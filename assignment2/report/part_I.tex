@@ -2,10 +2,10 @@
 \subsection{Data preprocessing}
 For this part of the assignment, the dataset had to be analyzed first as part of the preprocessing step to get the structure, detect issues such as missing values and find outliers. The bank marketing data (bank-additional.csv) has 4119 observations and 21 features. There was found to be 1230 unknowns in the categorical features of the dataset. Features that had unknowns were checked and there was found to be six features: job, marital, education, default, housing, and  loan that had unknowns (0.96\% , 0.3\% , 4.1\%, 19.5\%, 2.6\%, 2.6\%) respectively. Removing rows with missing values can be too limiting on some predictive modeling problems. Although the default  column was dropped because it has 803 missing values accounting for almost 20\% of the feature. For the other 5 features the proportion of the unknown's is sparse, the mode of the categorical features was used to replace the unknown's. Also, the "duration" feature was dropped since this attribute highly affects the output target (e.g., if duration=0 then y='no').
 
-The categorical predictor variables  were converted  to numerical using the "get\_dummies" function ,appending the structure to 47 features (4119,47).
+The categorical predictor variables  were converted  to numerical using the "get\_dummies" function ,appending the structure to 48 features (4119,48).
 The "pdays" feature was particularly challenging to deal with because of the massive variation in the values. Many of the samples had a "pdays" value of 999 indicating that the person was never contacted. We felt it would be better to represent this feature as a set of labels corresponding to how recent the person was contacted. The pandas function "pandas.cut" was used to perform this transformation and results in four bins (less than 1 week, less than 2 weeks, less than 1 month and never).
 
-Finally the numerical features were explored for inconsistencies and outliers. A series of boxplots were used to visualize the spread of the numerical data as seen in Figure~\ref{fig:fig1} below. None of the numerical features had outliers or skews that would cause concern.
+Finally the numerical features were explored for inconsistencies and outliers. A series of box plots were used to visualize the spread of the numerical data as seen in Figure~\ref{fig:fig1} below. None of the numerical features had outliers or skews that would cause concern.
 \begin{figure}[h!]
   \centering
   \includegraphics[width=4.1in]{assignment2/1-1-boxplots.png}
@@ -15,13 +15,16 @@ Finally the numerical features were explored for inconsistencies and outliers. A
 
 \newpage
 \subsection{Dividing data into training and testing}
-For dividing the data-set(4119 samples), 80\% was used for training and 20\% for testing. The reason for this split is because of the data imbalance as we have  3,668 samples labeled as no as compared to 451 labeled as yes. By using 80\% of the data for training the model, we are providing more information for the model to learn about the yes which improves the prediction for this label. %The 80-20 split ensures all cases is accounted for in the training phase and our algorithm is generalizing and not memorizing. 
+For dividing the data-set(4119 samples), 80\% was used for training and 20\% for testing. This split was chosen after researching best practices for splitting data\cite{ref_article1}. Splitting the data is important to allow validation of the trained models and detect common problems, such as over fitting. Certain algorithms are impacted more from over fitting than others. Neural networks and support vector machines are more sensitive to over fitting, however, algorithms such as Naive Bayes are generally more resilient to the problem.
+
+A decision or argument could be made to increase the fraction of the test split as this would give more values to validate over, however this comes at the cost of having less data to train the initial model. Due to this trade off we decided that 80/20 gives a decent balance of data to train and samples to validate against.
 
 
 \subsection{Applying classification}
 
 
-Decision Tree (DT):\\ The Depth of the tree was chosen as 3 for which the model performed more accurately without over-fitting. We first plotted the area under curve score (AUC score) against the tree depth (figure 1 below).
+\subsubsection{Decision Tree (DT)}
+The Depth of the tree was chosen as 3 for which the model performed more accurately without over-fitting. We first plotted the area under curve score (AUC score) against the tree depth (figure 1 below).
 \begin{figure}[!ht]
  \centering
 \includegraphics[width=3.1in]{assignment2/1-3-DecisionTree_AUC.png}
@@ -30,15 +33,16 @@ Decision Tree (DT):\\ The Depth of the tree was chosen as 3 for which the model 
 As it can be seen from the curve, the deeper the tree the higher the train AUC score but the test AUC score wont change a lot after tree depth of 3. This means that we get an overfitting case as our model will have a high AUC score (predicts the train data perfectly) for deeper tree depth but will fail to generalize and predict the test data. For this reason the tree depth was chose to be 3 for our model.
 If the depth of tree was not specified, by default, scikit-learn will keep expanding the nodes until all the leaves contain less than min\_samples\_split samples and as we saw in the graph below, the higher value of maximum depth causes over-fitting, and a lower value causes under-fitting\cite{ref_url1}.
 
+% ID3, or Iternative Dichotomizer, was the first of three Decision Tree implementations developed by Ross Quinlan
+% It builds a decision tree for the given data in a top-down fashion, starting from a set of objects and a specification of properties Resources and Information. each node of the tree, one property is tested based on maximizing information gain and minimizing entropy, and the results are used to split the object set. This process is recursively done until the set in a given sub-tree is homogeneous (i.e. it contains objects belonging to the same category). The ID3 algorithm uses a greedy search. It selects a test using the information gain criterion, and then never explores the possibility of alternate choices.
 
-ID3, or Iternative Dichotomizer, was the first of three Decision Tree implementations developed by Ross Quinlan
-It builds a decision tree for the given data in a top-down fashion, starting from a set of objects and a specification of properties Resources and Information. each node of the tree, one property is tested based on maximizing information gain and minimizing entropy, and the results are used to split the object set. This process is recursively done until the set in a given sub-tree is homogeneous (i.e. it contains objects belonging to the same category). The ID3 algorithm uses a greedy search. It selects a test using the information gain criterion, and then never explores the possibility of alternate choices.
 
-CART stands for Classification and Regression Trees. It is characterized by the fact that it constructs binary trees, namely each internal node has exactly two outgoing edges. The splits are selected using the twoing criteria and the obtained tree is pruned by cost–complexity Pruning. CART can handle both numeric and categorical variables and it can easily handle outliers.
+
+According to scikit documentation, they uses an optimized version of the CART algorithm for the decision tree. CART stands for Classification and Regression Trees. It is characterized by the fact that it constructs binary trees, namely each internal node has exactly two outgoing edges. The splits are selected using the twoing criteria and the obtained tree is pruned by cost–complexity Pruning. CART can handle both numeric and categorical variables and it can easily handle outliers\cite{ref_url3}.
 \\
 
-Random Forests (RF): \\
-The random forests classifier was built using the scikit-learn. The two main parameters that were considered here are the n\_estimator and tree depth. The n\_estimator simply represnts the number of trees in the model and tree depth is the depth of those tree. Similar to the approach described in the decision tree, AUC score was plotted against n\_estimator and tree depth to avoid any over-fitting cases. Figure~\ref{fig:fig2} shows the AUC scores for n\_estimator and figure~\ref{fig:fig3} shows the AUC scores for tree depth. 
+\subsubsection{Random Forests (RF)}
+The random forests classifier was built using the scikit-learn. The two main parameters that were considered here are the n\_estimator and tree depth. The n\_estimator simply represents the number of trees in the model and tree depth is the depth of those trees. Similar to the approach described in the decision tree, AUC score was plotted against n\_estimator and tree depth to observe any over-fitting cases. Figure~\ref{fig:fig2} shows the AUC scores for n\_estimator and figure~\ref{fig:fig3} shows the AUC scores for tree depth. Based on these graphs, the n\estimator was chosen to be as 15
 \begin{figure}[!ht]
  \centering
 \includegraphics[width=3.1in]{assignment2/1-3-RandomForests_AUC(n_estimators).png}
@@ -53,7 +57,7 @@ The random forests classifier was built using the scikit-learn. The two main par
 
 \\
 
-Neural Network (NN): \\
+\subsubsection{Neural Network (NN)}
 Neural netwrok is made up of three main layers: input, hidden, and output layers. In our case, the input layer is made up of 46 layers (number of input features) and the output layer has a single node (outputs either 1 or 0). The way the neural network model works is that it receives an inputs and multiply them by some weight which is then passed to an activation function to predict an output. Then the output is compared with y\_test label in which the weights will be adjusted accordingly. The process repeated until the maximum number of iterations reached. For building our model, we used gridsearch built-in function which returns the best hyper-parameters from the parameter space list provided. The hyper-parameters that were tested are:\\
 1- hidden layer sizes : [(32,32), (20,20), (47,47)] \\
 2- activation function: ['tanh', 'relu'] \\
@@ -63,6 +67,11 @@ then the gridsearch returned the parameters that best performed. However, one th
 The best parameters were found to be as follow: activation=tanh, alpha=0.0001, hidden layers = (32, 32), and solver = Stochastic Gradient Descent (SGD). 
 
 \\
+
+
+
+
+
 
 \subsection{Create a few plots of your model on the test data, two of the data dimensions at a time,indicating the predicted elements of each class using different colors or shapes. You may need to try plotting various pairs of dimensions to see which provide some interesting result. Be sure to label your axis and legend. Why is separation better on some plots than others}
 \begin{figure}[!ht]
@@ -79,14 +88,14 @@ The best parameters were found to be as follow: activation=tanh, alpha=0.0001, h
 Figure~\ref{fig:fig4} shows the comparison between true/false positive/negative metrics as well as accuracies
 \begin{figure}[!ht]
  \centering
-\includegraphics[width=4.1in]{assignment2/1-5_table.png}
+\includegraphics[width=3.0in]{assignment2/1-5_table.png}
 \caption{\label{fig:fig4}table of metrics/accuracies and algorithms}
 \end{figure}
 \\
 Figure~\ref{fig:fig5} shows the comparison between true/false positive/negative metrics as well as accuracies
 \begin{figure}[!ht]
  \centering
-\includegraphics[width=3.8in]{assignment2/80-20_barcharts_algorithms.png}
+\includegraphics[width=5.1in]{assignment2/barcharts_algorithms.png}
 \caption{\label{fig:fig5}bar charts of metrics/accuracies and algorithms}
 \end{figure}
 
@@ -99,10 +108,10 @@ Figure~\ref{fig:fig5} shows the comparison between true/false positive/negative 
 
 
 
-\subsection{ Fun/Bonus: attempt at least one method to tackle the discrepancy in the size of the classes (imbalanced data)}
-There are several methods to handle imbalanced data (https://elitedatascience.com/imbalanced-classes)
+\subsection{ /Bonus: attempt at least one method to tackle the discrepancy in the size of the classes (imbalanced data)}
+There are several methods to handle imbalanced data\cite{ref_url2}
 1- Up-sample Minority Class(attempted)\\
-2-Down-sample Majority Class(attempted)\\
+2- Down-sample Majority Class(attempted)\\
 3- Change Your Performance Metric(attempted)\\
 4- Penalize Algorithms (Cost-Sensitive Training)\\
 5- Use Tree-Based Algorithms\\
