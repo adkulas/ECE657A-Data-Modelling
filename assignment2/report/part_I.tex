@@ -1,15 +1,25 @@
 \section{Question I: Revisiting HW4 Bank Classification with New Tools (for dataset A)}
 \subsection{Data preprocessing}
-For this part of the assignment, the dataset had to be analyzed first as part of the preprocessing step to get the structure ,detect issues such as missing values and outliers. The bank marketing data(bank-additional.csv) has 4119 observations and 21 features.There was found to be 1230 unknowns in the categorical features of the dataset. Features that had unknowns were checked and there was found to be six features: job,marital,education,default,housing,loan that had unknowns( 0.96 ,0.3 ,4.1,  19.5, 2.6,2.6)\% respectively.Removing rows with missing values can be too limiting on some predictive modeling problems. Although the default  column was dropped because it has 803 missing values accounting for almost 20\% of the feature. For the other 5 features the proportion of the unknown's is sparse, the mode of the categorical features was used to replace the unknown's. Also, the "duration" feature was dropped since this attribute highly affects the output target (e.g., if duration=0 then y='no').
-The categorical predictor variables  were converted  to numerical using get\_dummies ,appending the structure to 47 features (4119,47).
-Outliers were found by first finding the standard deviation of each feature and then using each standard deviation to find values in that specific feature that vary by more than 3 standard deviations. 
+For this part of the assignment, the dataset had to be analyzed first as part of the preprocessing step to get the structure, detect issues such as missing values and find outliers. The bank marketing data (bank-additional.csv) has 4119 observations and 21 features. There was found to be 1230 unknowns in the categorical features of the dataset. Features that had unknowns were checked and there was found to be six features: job, marital, education, default, housing, and  loan that had unknowns (0.96\% , 0.3\% , 4.1\%, 19.5\%, 2.6\%, 2.6\%) respectively. Removing rows with missing values can be too limiting on some predictive modeling problems. Although the default  column was dropped because it has 803 missing values accounting for almost 20\% of the feature. For the other 5 features the proportion of the unknown's is sparse, the mode of the categorical features was used to replace the unknown's. Also, the "duration" feature was dropped since this attribute highly affects the output target (e.g., if duration=0 then y='no').
 
+The categorical predictor variables  were converted  to numerical using the "get\_dummies" function ,appending the structure to 47 features (4119,47).
+The "pdays" feature was particularly challenging to deal with because of the massive variation in the values. Many of the samples had a "pdays" value of 999 indicating that the person was never contacted. We felt it would be better to represent this feature as a set of labels corresponding to how recent the person was contacted. The pandas function "pandas.cut" was used to perform this transformation and results in four bins (less than 1 week, less than 2 weeks, less than 1 month and never).
+
+Finally the numerical features were explored for inconsistencies and outliers. A series of boxplots were used to visualize the spread of the numerical data as seen in Figure~\ref{fig:fig1} below. None of the numerical features had outliers or skews that would cause concern.
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=6.1in]{assignment2/1-1-boxplots.png}
+  \caption{Boxplot to detect outliers}
+  \label{fig:fig1}
+\end{figure}
+
+\newpage
 \subsection{Dividing data into training and testing}
 For dividing the data-set(4119 samples), 80\% was used for training and 20\% for testing. The reason for this split is because of the data imbalance as we have  3,668 samples labeled as no as compared to 451 labeled as yes. By using 80\% of the data for training the model, we are providing more information for the model to learn about the yes which improves the prediction for this label. %The 80-20 split ensures all cases is accounted for in the training phase and our algorithm is generalizing and not memorizing. 
 
 
 \subsection{Applying classification}
-%Figure~\ref{fig:fig1} shows the comparison between histogram plots of feature 9 and 24 before and after normalization. 
+
 
 Decision Tree (DT):\\ The Depth of the tree was chosen as 3 for which the model performed more accurately without over-fitting. We first plotted the area under curve score (AUC score) against the tree depth (figure 1 below).
 \begin{figure}[!ht]
@@ -67,7 +77,7 @@ Figure~\ref{fig:fig4} shows the comparison between true/false positive/negative 
 \includegraphics[width=6.1in]{assignment2/1-5_table.png}
 \caption{\label{fig:fig4}table of metrics/accuracies and algorithms}
 \end{figure}
-
+\\
 Figure~\ref{fig:fig5} shows the comparison between true/false positive/negative metrics as well as accuracies
 \begin{figure}[!ht]
  \centering
@@ -77,18 +87,20 @@ Figure~\ref{fig:fig5} shows the comparison between true/false positive/negative 
 
 \\
 
+
+
 \subsection{Provide a short explanation of the results you have shown and what it means. Which classification method performed better? Why? Contrast performance with classification from the previous homework and comment on the difference, if any}
 
 
-\\
+
 
 \subsection{ Fun/Bonus: attempt at least one method to tackle the discrepancy in the size of the classes (imbalanced data)}
 There are several methods to handle imbalanced data (https://elitedatascience.com/imbalanced-classes)
-1 Up-sample Minority Class(attempted)
-2 Down-sample Majority Class(attempted)
-3 Change Your Performance Metric(attempted)
-4 Penalize Algorithms (Cost-Sensitive Training)
-5 Use Tree-Based Algorithms
+1- Up-sample Minority Class(attempted)\\
+2-Down-sample Majority Class(attempted)\\
+3- Change Your Performance Metric(attempted)\\
+4- Penalize Algorithms (Cost-Sensitive Training)\\
+5- Use Tree-Based Algorithms\\
 Change Your Performance Metric
  I think to tackle the issue of imbalanced data,precision  recall curve should be used when analyzing each algorithms performance  .As we know , ROC/AUC uses TPR(True positive rate) on Y axis and FPR(False positive rate ) on X axis. So replacing the FPR with precision on the X axis of the AUC graph might be the way to go.
  Precision=(TP/TP +FP) FPR= (FP/TN+FP)
