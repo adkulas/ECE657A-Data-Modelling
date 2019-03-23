@@ -2,6 +2,11 @@ build/
 .vscode/
 .ipynb_checkpoints/
 
+#datasets
+dataset/
+
+.DS_STORE
+
 # Prerequisites
 *.d
 
