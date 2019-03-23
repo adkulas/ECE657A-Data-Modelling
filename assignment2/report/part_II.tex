@@ -1,15 +1,20 @@
 \section{Question 2:Parameter Selection and Classification (for dataset B)}
 \subsection{Data preprocessing}
-Z-score normalization was used for normalizing data instead of the min-max normalization. The Z-Score normalization is a standardization and re-scaling the range of the data in
-which the mean is centered on zero and it has a unit variance. This means that z-score will still preserve the range of the data (maximum and minimum) as min-max normalization but also will provide the standard deviation and variance of the distribution. \\
-We split the test and training set randomly in order to evaluate the performance of the models (Classifiers). 
-
-
+Z-score normalization was used for normalizing data instead of the min-max normalization. The Z-Score normalization is a standardization and re-scaling the range of the data in which the mean is centered on zero and it has a unit variance. This means that z-score will still preserve the range of the data (maximum and minimum) as min-max normalization but also will provide the standard deviation and variance of the distribution. This is helpful when it comes for dealing with data flowing in real time as we can easily normalize data coming in using the mean and variance, however, if we used min-max normalization then we might run into an issue where the data coming in is larger than the max the we trained model. This is an advantage that we get by choosing the z-score over the min-max. \\
+We split the test and training set randomly in order to evaluate the performance of the models (Classifiers). \\
+For this dataset, the distribution of the labels is almost the same. We have 1137 samples labeled as 1 and 1063 samples labeled as -1.
 
 
 \\
 \subsection{Parameter selection for k-NN and SVM}
 
+Figure~\ref{fig:fig} shows the plot of the accuracy vs the value  of the parameter k. We see that 
+
+\begin{figure}[!ht]
+ \centering
+\includegraphics[width=6.1in]{assignment2/2-2-a-kNN.png}
+\caption{\label{fig:fig} Relationship between accuracy and the parameter k }
+\end{figure}
 
 
 \\
