@@ -74,10 +74,30 @@ The best parameters were found to be as follow: activation=tanh, alpha=0.0001, h
 
 
 \subsection{Create a few plots of your model on the test data, two of the data dimensions at a time,indicating the predicted elements of each class using different colors or shapes. You may need to try plotting various pairs of dimensions to see which provide some interesting result. Be sure to label your axis and legend. Why is separation better on some plots than others}
+
+
+\clearpage{}
 \begin{figure}[!ht]
  \centering
-\includegraphics[width=3.1in]{assignment2/1-4-dT_RF_(euribor3mVSnr.employed).png}
-\caption{\label{fig:fig4}Plot of euribor3m VS nr.employed }
+\includegraphics[width=2.5]{assignment2/1-4- eur and emp features.png}
+\caption{\label{fig:2dplot1}Plot of euribor3m VS emp.var.rate }
+\end{figure}
+
+
+
+\clearpage{}
+\begin{figure}[!ht]
+ \centering
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{assignment2/1-4-age and previous features.png}
+\caption{\label{fig:2dplot1}Plot of age VS previous }
+\end{figure}
+
+
+\clearpage{}
+\begin{figure}[!ht]
+ \centering
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{assignment2/1-4-age and nremployed features.png}
+\caption{\label{fig:2dplot1}Plot of age VS nr.employed }
 \end{figure}
 \\
 
@@ -92,7 +112,7 @@ Figure~\ref{fig:fig4} shows the comparison between true/false positive/negative 
 \caption{\label{fig:fig4}table of metrics/accuracies and algorithms}
 \end{figure}
 \\
-Figure~\ref{fig:fig5} shows the comparison between true/false positive/negative metrics as well as accuracies. We see from the bar charts that neural network performed better in classif
+Figure~\ref{fig:fig5} shows the comparison between true/false positive/negative metrics as well as accuracies. We see from the bar charts that neural network performed better in classifying true positives and false negatives as compared to decision trees and random forests. However, decision tree and random forest had a higher values classifying false positive and true negative values. Comparing the overall accuracies, we see that all three models had almost similar accuracies (around 89\%).
 \begin{figure}[!ht]
  \centering
 \includegraphics[width=5.1in]{assignment2/barcharts_algorithms.png}
@@ -109,8 +129,8 @@ From the confusion matrix we get the True positive values  which represents the 
 
 
 
-\subsection{ /Bonus: attempt at least one method to tackle the discrepancy in the size of the classes (imbalanced data)}
-There are several methods to handle imbalanced data\cite{ref_url2}
+\subsection{Bonus: attempt at least one method to tackle the discrepancy in the size of the classes (imbalanced data)}
+There are several methods to handle imbalanced data\cite{ref_url2}\\
 1- Up-sample Minority Class(attempted)\\
 2- Down-sample Majority Class(attempted)\\
 3- Change Your Performance Metric(attempted)\\
@@ -119,21 +139,23 @@ There are several methods to handle imbalanced data\cite{ref_url2}
 Change your Performance Metric :
  I think to tackle the issue of imbalanced data,precision  recall curve should be used when analyzing each algorithms performance  .As we know , ROC/AUC uses TPR(True positive rate) on Y axis and FPR(False positive rate ) on X axis. So replacing the FPR with precision on the X axis of the AUC graph might be the way to go.
  Precision=(TP/TP +FP) FPR= (FP/TN+FP)
- Since there were lots of samples that were Negatives(No's) relative to the number of Positives(Yes's) samples, then precision might be more useful than false positive rate . This is because precision does not include the number of True Negatives in its calculation, and is not affected by imbalance.
-Up-sample Minority Class
-The new data has more observations than the original, and the ratio of the two classes is now 1:1.3668 observations for both classes.\\
+ Since there were lots of samples that were Negatives(No's) relative to the number of Positives(Yes's) samples, then precision might be more useful than false positive rate . This is because precision does not include the number of True Negatives in its calculation, and is not affected by imbalance.\\
+ \newline
+Up-sample Minority Class:
+The new data has more observations than the original, and the ratio of the two classes is now 1:1.(3668 observations for both classes).\\
 It is clear that accuracy increased compared to our previous results.This result makes more sense and is a better performance metric
 \begin{figure}[!ht]
  \centering
-\includegraphics[width=5.1in]{assignment2/barcharts_algorithms.png}
+\includegraphics[width=6.1in]{assignment2/1-7-barcharts_up.png}
 \caption{\label{fig:fig5}Accuracies after Upsampling }
 \end{figure}
-Down-sample Majority
-The new data has less observations than the original, and the ratio of the two classes is now 1:1. 451 observations for both classes.\\
+\newline
+Down-sample Majority:
+The new data has less observations than the original, and the ratio of the two classes is now 1:1.(451 observations for both classes).\\
 It is clear that accuracy decreased compared to our previous results. This may be because we decreased the size of our data dramatically.
 \begin{figure}[!ht]
  \centering
-\includegraphics[width=5.1in]{assignment2/barcharts_algorithms.png}
+\includegraphics[width=6.1in]{assignment2/1-7-barcharts_dn.png}
 \caption{\label{fig:fig5}Accuracies after Downsampling }
 \end{figure}
 
