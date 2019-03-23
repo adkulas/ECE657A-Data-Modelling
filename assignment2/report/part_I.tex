@@ -42,7 +42,7 @@ According to scikit documentation, they uses an optimized version of the CART al
 \\
 
 \subsubsection{Random Forests (RF)}
-The random forests classifier was built using the scikit-learn. The two main parameters that were considered here are the n\_estimator and tree depth. The n\_estimator simply represents the number of trees in the model and tree depth is the depth of those trees. Similar to the approach described in the decision tree, AUC score was plotted against n\_estimator and tree depth to observe any over-fitting cases. Figure~\ref{fig:fig2} shows the AUC scores for n\_estimator and figure~\ref{fig:fig3} shows the AUC scores for tree depth. Based on these graphs, the n\estimator was chosen to be as 15
+The random forests classifier was built using the scikit-learn. The two main parameters that were considered here are the n\_estimator and tree depth. The n\_estimator simply represents the number of trees in the model and tree depth is the depth of those trees. Similar to the approach described in the decision tree, AUC score was plotted against n\_estimator and tree depth to observe any over-fitting cases. Figure~\ref{fig:fig2} shows the AUC scores for n\_estimator and figure~\ref{fig:fig3} shows the AUC scores for tree depth. Based on these graphs, the n\estimator was chosen to be as 16 and the depth of the tree as 3.
 \begin{figure}[!ht]
  \centering
 \includegraphics[width=3.1in]{assignment2/1-3-RandomForests_AUC(n_estimators).png}
@@ -85,14 +85,14 @@ The best parameters were found to be as follow: activation=tanh, alpha=0.0001, h
 \newpage
 \subsection{Produce a table with the true/false positive/negative metrics as well as accuracy's. Compare the values using bar charts}
 
-Figure~\ref{fig:fig4} shows the comparison between true/false positive/negative metrics as well as accuracies
+Figure~\ref{fig:fig4} shows the comparison between true/false positive/negative metrics as well as accuracies. 
 \begin{figure}[!ht]
  \centering
 \includegraphics[width=3.0in]{assignment2/1-5_table.png}
 \caption{\label{fig:fig4}table of metrics/accuracies and algorithms}
 \end{figure}
 \\
-Figure~\ref{fig:fig5} shows the comparison between true/false positive/negative metrics as well as accuracies
+Figure~\ref{fig:fig5} shows the comparison between true/false positive/negative metrics as well as accuracies. We see from the bar charts that neural network performed better in classif
 \begin{figure}[!ht]
  \centering
 \includegraphics[width=5.1in]{assignment2/barcharts_algorithms.png}
@@ -104,7 +104,8 @@ Figure~\ref{fig:fig5} shows the comparison between true/false positive/negative 
 
 \newpage
 \subsection{Provide a short explanation of the results you have shown and what it means. Which classification method performed better? Why? Contrast performance with classification from the previous homework and comment on the difference, if any}
-
+In this case ,if a customer will subscribe to term deposit at the bank is interpreted as "1"(Yes) and if a customer will not subscribe to term deposit is interpreted as "0"(No).\\
+From the confusion matrix we get the True positive values  which represents the number of actual label (1's) predicted correctly as (1's) by our model and false positives(type 1 error) values represents the number of the  actual label (0's) predicted wrongly as (1's) by the model. True negative values represents the number of actual label (0's) predicted correctly as (0's) by our model. False negatives(type ii error) values represents the number of the  actual label (1's) predicted wrongly as (0's) by the model, here the model fails to detect an effect. Based on the bar chart above, we see that the neural network performed better at predicting the true positives compared to decision tress and random forests. Neural network also had the least miss-classification of the false positives. 
 
 
 
@@ -119,6 +120,22 @@ Change your Performance Metric :
  I think to tackle the issue of imbalanced data,precision  recall curve should be used when analyzing each algorithms performance  .As we know , ROC/AUC uses TPR(True positive rate) on Y axis and FPR(False positive rate ) on X axis. So replacing the FPR with precision on the X axis of the AUC graph might be the way to go.
  Precision=(TP/TP +FP) FPR= (FP/TN+FP)
  Since there were lots of samples that were Negatives(No's) relative to the number of Positives(Yes's) samples, then precision might be more useful than false positive rate . This is because precision does not include the number of True Negatives in its calculation, and is not affected by imbalance.
+Up-sample Minority Class
+The new data has more observations than the original, and the ratio of the two classes is now 1:1.3668 observations for both classes.\\
+It is clear that accuracy increased compared to our previous results.This result makes more sense and is a better performance metric
+\begin{figure}[!ht]
+ \centering
+\includegraphics[width=5.1in]{assignment2/barcharts_algorithms.png}
+\caption{\label{fig:fig5}Accuracies after Upsampling }
+\end{figure}
+Down-sample Majority
+The new data has less observations than the original, and the ratio of the two classes is now 1:1. 451 observations for both classes.\\
+It is clear that accuracy decreased compared to our previous results. This may be because we decreased the size of our data dramatically.
+\begin{figure}[!ht]
+ \centering
+\includegraphics[width=5.1in]{assignment2/barcharts_algorithms.png}
+\caption{\label{fig:fig5}Accuracies after Downsampling }
+\end{figure}
 
 
 
