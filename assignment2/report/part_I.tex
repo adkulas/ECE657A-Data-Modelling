@@ -58,50 +58,60 @@ The random forests classifier was built using the scikit-learn. The two main par
 \\
 
 \subsubsection{Neural Network (NN)}
-Neural netwrok is made up of three main layers: input, hidden, and output layers. In our case, the input layer is made up of 46 layers (number of input features) and the output layer has a single node (outputs either 1 or 0). The way the neural network model works is that it receives an inputs and multiply them by some weight which is then passed to an activation function to predict an output. Then the output is compared with y\_test label in which the weights will be adjusted accordingly. The process repeated until the maximum number of iterations reached. For building our model, we used gridsearch built-in function which returns the best hyper-parameters from the parameter space list provided. The hyper-parameters that were tested are:\\
-1- hidden layer sizes : [(32,32), (20,20), (47,47)] \\
-2- activation function: ['tanh', 'relu'] \\
-3- solver: ['sgd', 'adam','lbfgs'] \\
-4- alpha: [0.0001, 0.05] \\
-then the gridsearch returned the parameters that best performed. However, one thing to note is that even though there is no rule of thumb for choosing the number of neurons in the hidden layers, it should not exceed the number of input layers (46 in this case) to avoid over-fitting problems. 
-The best parameters were found to be as follow: activation=tanh, alpha=0.0001, hidden layers = (32, 32), and solver = Stochastic Gradient Descent (SGD). 
+A neural network algorithm was employed to apply classification to the data. The neural network used was implemented using the "MLPclassifier" class from the sklearn library. The library implements a simple feed forward neural network and allows the user to input various hyper parameters to tweak and alter the architecture, learning algorithm and training parameters. The challenge with neural networks is determining which values for the hyper parameters will provide acceptable performance. The grid search approach was used to evaluate which values of hyper parameters provide better results. The parameters considered in the grid search were: iterations, hidden layer sizes, activation function, solver, and alpha. The architectures were evaluated with different depths and neuron counts. The parameter list can be seen below:
 
-\\
+\begin{itemize}
+\item max\_iter: 2000
+\item hidden\_layer\_sizes: (48), (48,48), (48,48,48,10)
+\item activation: tanh, relu
+\item solver: "sgd, "adam", "lbgfs"
+\item alpha: 0.0001, 0.05
+\end{itemize}
+
+A layer size of 48 is used to match the number of features that are input into the neural network. This decision is made based on a general rule of thumb that matching the number of features provides decent performance. The depth of the network is varied from 1 hidden layer up to 4 hidden layers. The optimal architecture after performing the grid search was to have two hidden layers of 48 neurons. This was chosen in the model trained for prediction.
+
+Other important properties of the model are the activation function and solver used. Based on results of the grid search, the "tanh" activation function with "sgd" solver performed best. The "tanh" activation function is similar to the traditional sigmoid function however, it has an output range from -1 to 1. This advantage helps to map negative numbers more strongly where as this property is lost in the sigmoid. The "sgd" solver is stochastic gradient descent. This method iterates through samples and determines which way to adjust the weights of the neurons based on the gradient at that point. True stochastic gradient descent performs the gradient on each sample. The library implements a "mini-batch" method of optimization in which 200 samples are passed through for each step. This method is computationally more efficient and can have a smoother convergence because of the use of averaged samples.
 
 
 
-
-
-
+%QUESTION 1.4
 \subsection{Create a few plots of your model on the test data, two of the data dimensions at a time,indicating the predicted elements of each class using different colors or shapes. You may need to try plotting various pairs of dimensions to see which provide some interesting result. Be sure to label your axis and legend. Why is separation better on some plots than others}
 
 
-\clearpage{}
-\begin{figure}[!ht]
- \centering
-\includegraphics[width=2.5]{assignment2/1-4- eur and emp features.png}
-\caption{\label{fig:2dplot1}Plot of euribor3m VS emp.var.rate }
-\end{figure}
+Predictions were made using all three trained models. Three pairs of features were made to display separation between different classes. Each axis represents one feature.
 
-
+The two features "euribor3m" and "emp.var.rate" were plotted in figure~\ref{fig:2dplot1} below. The predicted labels can be seen as either a blue circle or green triangle. We can see from the data that all three of the algorithms predicted the outcome very similarly. These two features do not display any distinctive grouping of the samples. This fact may be amplified by the imbalance in the dataset. There are many more no labels than yes labels. This is evident in the plots. 
 
 \clearpage{}
 \begin{figure}[!ht]
  \centering
-\includegraphics[width=2.5]{assignment2/1-4-age and previous features.png}
-\caption{\label{fig:2dplot1}Plot of age VS previous }
+\includegraphics[width=5.0in]{"assignment2/1-4- eur and emp features".png}
+\caption{\label{fig:2dplot1}Plot of euribor3m vs emp.var.rate }
 \end{figure}
+
+The plots in figure~\ref{fig:2dplot2} show the predicted labels of the samples and the corresponding values for the age and previous features. All three classifiers seem to predict the labels similarly once again. The neural network tends to have more true predictions when previous has a value of 0, however the decision tree and random forests have almost no true predicted samples where previous has a value of 0. Generally it seems most predictions for true samples occur at higher values for the previous variable over all models.
+
+\clearpage{}
+\begin{figure}[!ht]
+ \centering
+\includegraphics[width=5.0in]{"assignment2/1-4-age and previous features".png}
+\caption{\label{fig:2dplot2}Plot of age VS previous }
+\end{figure}
+
+
+The features for "nr.employed" and "age" with their associated predictions can seen in figure~\ref{fig:2dplot3}. We can see that most of the samples with a true prediction appear where "nr.employed" is less than -2.0. Overall all three classifiers had similar predictions to one another.
 
 
 \clearpage{}
 \begin{figure}[!ht]
  \centering
-\includegraphics[width=2.5]{assignment2/1-4-age and nremployed features.png}
-\caption{\label{fig:2dplot1}Plot of age VS nr.employed }
+\includegraphics[width=5.0in]{"assignment2/1-4-age and nremployed features".png}
+\caption{\label{fig:2dplot3}Plot of age VS nr.employed }
 \end{figure}
-\\
+\clearpage{}
 
-
+\newpage
+\newpage
 \newpage
 \subsection{Produce a table with the true/false positive/negative metrics as well as accuracy's. Compare the values using bar charts}
 
@@ -112,7 +122,7 @@ Figure~\ref{fig:fig4} shows the comparison between true/false positive/negative 
 \caption{\label{fig:fig4}table of metrics/accuracies and algorithms}
 \end{figure}
 \\
-Figure~\ref{fig:fig5} shows the comparison between true/false positive/negative metrics as well as accuracies. We see from the bar charts that neural network performed better in classifying true positives and false negatives as compared to decision trees and random forests. However, decision tree and random forest had a higher values classifying false positive and true negative values. Comparing the overall accuracies, we see that all three models had almost similar accuracies (around 89\%).
+Figure~\ref{fig:fig5} shows the comparison between true/false positive/negative metrics as well as accuracies. We see from the bar charts that neural network performed better in classifying true positives and false negatives as compared to decision trees and random forests. However, decision tree and random forest had a higher values classifying false positive and true negative values. Comparing the overall accuracies, we see that all three models had nearly identical accuracies (around 89\%).
 \begin{figure}[!ht]
  \centering
 \includegraphics[width=5.1in]{assignment2/barcharts_algorithms.png}
@@ -124,8 +134,9 @@ Figure~\ref{fig:fig5} shows the comparison between true/false positive/negative 
 
 \newpage
 \subsection{Provide a short explanation of the results you have shown and what it means. Which classification method performed better? Why? Contrast performance with classification from the previous homework and comment on the difference, if any}
-In this case ,if a customer will subscribe to term deposit at the bank is interpreted as "1"(Yes) and if a customer will not subscribe to term deposit is interpreted as "0"(No).\\
-From the confusion matrix we get the True positive values  which represents the number of actual label (1's) predicted correctly as (1's) by our model and false positives(type 1 error) values represents the number of the  actual label (0's) predicted wrongly as (1's) by the model. True negative values represents the number of actual label (0's) predicted correctly as (0's) by our model. False negatives(type ii error) values represents the number of the  actual label (1's) predicted wrongly as (0's) by the model, here the model fails to detect an effect. Based on the bar chart above, we see that the neural network performed better at predicting the true positives compared to decision tress and random forests. Neural network also had the least miss-classification of the false positives. 
+In this case, if a customer will subscribe to term deposit at the bank is interpreted as "1"(Yes) and if a customer will not subscribe to term deposit is interpreted as "0"(No).\\
+
+From the confusion matrix we get the True positive values  which represents the number of actual label (1's) predicted correctly as (1's) by our model and false positives(type 1 error) values represents the number of the  actual label (0's) predicted wrongly as (1's) by the model. True negative values represents the number of actual label (0's) predicted correctly as (0's) by our model. False negatives(type ii error) values represents the number of the  actual label (1's) predicted wrongly as (0's) by the model, here the model fails to detect an effect. Based on the bar chart above, we see that the neural network performed better at predicting the true positives compared to decision tress and random forests. Neural network also had the least miss-classification of the false positives.
 
 
 
