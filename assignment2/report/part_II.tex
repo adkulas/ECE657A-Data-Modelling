@@ -6,80 +6,50 @@ For this dataset, the distribution of the labels is almost the same. We have 113
 
 
 \\
-\subsection{Parameter selection for k-NN and SVM}
+\subsection{Parameter selection:}
+\subsubsection{Parameter selection for k-NN}
 
-Figure~\ref{fig:fig} shows the plot of the accuracy vs the value  of the parameter k. We see that 
+A k-NN classifier was employed to predict the labels of the data in data set B based on the input of the 56 features. The main hyper parameter of the k-NN model is the number of neighbours, "k". A set of possible values for the hyper parameter were tested and validated using 5 fold cross validation. Each fold represents a slice of the data and one fold at a time is used as the validation set to verify the performance of the model. This model was not validated directly on the test set because 5 fold cross validation intentionally using one of the folds as a test set. In the case of 5 fold the resulting test train split is effectively 80/20. The test set can then be used to compared different models with equal fairness knowing that none of the data would bleed through during the cross validation step.
 
+For each value of K the cross validated accuracy score was returned as the key performance metric. Figure~\ref{fig:knntuning} shows the plot of the accuracy vs the value  of the parameter "k". We see that the model performed best when the value of "k" was set to 15.
+
+\clearpage{}
 \begin{figure}[!ht]
  \centering
 \includegraphics[width=6.1in]{assignment2/2-2-a-kNN.png}
-\caption{\label{fig:fig} Relationship between accuracy and the parameter k }
+\caption{\label{fig:knntuning} Relationship between accuracy and the parameter k }
 \end{figure}
 
 
-\\
+
+\subsubsection{Parameter selection for SVM}
+
+A support vector machine model was created to predict labels of the given data set. There were two hyper parameters that need to be determined for the SVM model, "C" and "gamma". In order to determine the optimal values a grid search was done over the parameter space with the given set of values. The scoring metric used for each combination of parameters was "roc_auc". The result of the hyper parameter tuning was a value of 0.01 for gamma and 10 for C.
+
+The model was then trained on the training data using the hyper parameters found during the cross validation grid search. Figure~\ref{fig:svmtuning} shows the plot of AUCROC for the tuned and trained SVM model. The AUC of the model is 0.97.
+
+
+\begin{figure}[!ht]
+ \centering
+\includegraphics[width=6.1in]{assignment2/2-2-b-svm.png}
+\caption{\label{fig:svmtuning} SVM area under curve receiver operator characteristic}
+\end{figure}
+
+
 \subsection{Training six classifiers}
 
+\subsubsection{Classify the test set using k-NN, SVM, Random Forests and Neural Networks. Use the chosen parameters from the parameter selection process in question 2 for k-NN and SVM. For the next two classifiers use the default setups listed at the end for Random Forests and Neural Networks}
 
 
-\\
-\subsection{Training six classifiers}
-% \begin{figure}[htb]
-%  \centering
-% \includegraphics[width=\textwidth]{assignment1/2-1-pcafeatures.png}
-% \caption{\label{fig:fig2}Scree plot showing the principal components after PCA}
-% \end{figure}
+\subsubsection{For the fifth and sixth classifiers, you should explore the parameters of the Random Forests and Neural Network models to devise your own classifier instance that does better than the other methods. For example, you could consider a deeper neural network with multiple layers, use different optimization/solver algorithms, you could modify the Random Forests using different parameter settings for depth and number of trees or enable boosting. Play around with options and choose a setting for RFs and NNs that performs better}
 
 
-
-% \subsection{2-D plot for the top two PCA's}
-
-% The data is projected onto a 2 dimensional representation using the first and second principal components. The principal components are eigenvectors that represent where the data has the most variance. The projection maps the data to the plane created by the first two principal components. Figure~\ref{fig:fig3} below shows the resulting scatter plot of the data. Each digit can be identified by its colour on the plot. We can see that the digit "1" has a very tight grouping. This means that although we have attempted to maximize scatter using PCA, the features of all the hand written "1's" in the dataset are still very similar. We can contrast this by observing the digit "0". This digit has the largest spread compared to any other number. This indicates that the values of features vary greatly between different hand written "0's" and as a result could be harder to group and classify.
-
-% \begin{figure}[htb]
-%  \centering
-% \includegraphics[width=\textwidth]{assignment1/2-2-dimreduction_pca1_2.png}
-% \caption{\label{fig:fig3}Data reduced to 2 dimensions using the first and second principal components}
-% \end{figure}
-
-
-% \clearpage{}
-% \subsection{2-D plot for the 5th and 6th principal components}
-
-% The PCA projection was repeated using the 5th and 6th principal components. We would expect that these principal components contain less variance than the PCA features used in Figure~\ref{fig:fig3}. A similar plot was created by mapping the data to the plane created by the 5th and 6th components. This was done manually in our code because the PCA class offered by sci-kit learn does not have an option to select a range of PCA components starting from an arbitrary component. The eigenvectors were retrieved from the model and the transpose was right multiplied by the data. The result is similar to above, and can be seen in Figure~\ref{fig:fig4}. As we expected, the variance contained in these components is lower and as a result the data points are grouped together more. It is harder to distinguish the digits from one another as they all tend to have a similar amount of scatter and appear centered around the mean. We can also see that the maximum spread of the data is much less than in Figure~\ref{fig:fig3}. Qualitatively, PCA using the first two components spreads from -10 to 20 while the 5th and 6th components result in a spread of -10 to 10.
-
-% \begin{figure}[htb]
-%  \centering
-% \includegraphics[width=\textwidth]{assignment1/2-3-dimreduction_pca5_6.png}
-% \caption{\label{fig:fig4}Data reduced to 2 dimensions using the fifth and sixth principal components}
-% \end{figure}
+\subsubsection{Repeat each classification method 20 times by varying the split of the training-test set as in question 2-2. Report the average and standard deviation of classification performance on the test set regarding: accuracy, precision, recall, and F- Measure. Also report the training time and classification time of all the methods. Explain why the classification was repeated 20 times}
 
 
 
-% \clearpage{}
-% \subsection{Naive Bayes classifier for 8 sets of dimensionality reduced data}
-
-% The dataset was transformed in 8 sets of differing dimensionality. A Naive Bayes model was applied to each set and trained using the labels provided. Accuracy of the model was determined by directly predicting the label given the data it was trained on. Naive Bayes is a simple linear hypothesis function and as a result, it is highly susceptible to bias, however, it is resilient to over-fitting.  Figure~\ref{fig:fig5} shows a bar plot of each set and its corresponding performance.  Figure~\ref{fig:fig6} show a line plot of performance vs the variance retained in the set after the dimensionality reduction. It is interesting to see that performance improves with more retained variance up to a point. The performance of the Naive Bayes classifier is best when the dimensionality reduction retains approximately 43\% of the variance. After that point performance declines. One hypothesis for this result is that as we provide more information by including additional features (dimensions), the classifier has to model much more variance. This noise could cause problems in predictive power because the it dilutes the information with the most influential predictive power (the first few principal components). Perhaps applying a technique to split the data into training and testing data could improve results.  
-% \begin{figure}[htb]
-%  \centering
-% \includegraphics[width=\textwidth]{assignment1/2-4-NBprediction_bar.png}
-% \caption{\label{fig:fig5}Naive Bayes classifier performance over multiple sets of dimensionality reduced data}
-% \end{figure}
-
-% \begin{figure}[htb]
-%  \centering
-% \includegraphics[width=\textwidth]{assignment1/2-4-NBprediction_line.png}
-% \caption{\label{fig:fig6}Naive Bayes classifier performance versus the variance retained in the training set}
-% \end{figure}
+\subsection{Obtained Results}
 
 
-% \clearpage{}
-% \subsection{Linear Discriminant Analysis (LDA)}
 
-% Linear discriminant analysis was used to reduce the dimensionality of the data to 2 dimensions. Figure~\ref{fig:fig7} shows a scatter plot of the data after the LDA transformation. Each class is coloured in different colour. The LDA technique seems to group the classes very well. It is easy to distinguish the boundaries between the different digits of the data. The PCA transformation result in groupings where it is not intuitive to discern the class. This is most likely due to the fact that the two techniques differ in their approach. LDA is a supervised technique that uses the class labels to determine boundaries between the labels. Since PCA is unsupervised, it does not have the ability to map each class relative to one another and simply aims to maximize scatter and variance between the features.
-
-% \begin{figure}[htb]
-%  \centering
-% \includegraphics[width=\textwidth]{assignment1/2-5-LDA_dim_reduction.png}
-% \caption{\label{fig:fig7}LDA dimension reduction to 2 dimensions}
-% \end{figure}
+\subsection{Feature Removal}
