@@ -41,6 +41,20 @@ The model was then trained on the training data using the hyper parameters found
 \subsubsection{Classify the test set using k-NN, SVM, Random Forests and Neural Networks. Use the chosen parameters from the parameter selection process in question 2 for k-NN and SVM. For the next two classifiers use the default setups listed at the end for Random Forests and Neural Networks}
 
 
+The performance for the four models (KNN, SVM, Random Forest and Neural Network) was calculated using the sklearn library function "classification\_report
+
+\begin{figure}[!ht]
+ \centering
+\includegraphics[width=6.1in]{assignment2/2-3-a1.png}
+\caption{\label{fig:resultsknnsvm} Performance Result for KNN and SVM models using parameters from part 1}
+\end{figure}
+\begin{figure}[!ht]
+ \centering
+\includegraphics[width=6.1in]{assignment2/2-3-a2.png}
+\caption{\label{fig:resulstsrfnn} Performance Result for Random Forest and Neural Network models using default parameters}
+\end{figure}
+
+
 \subsubsection{For the fifth and sixth classifiers, you should explore the parameters of the Random Forests and Neural Network models to devise your own classifier instance that does better than the other methods. For example, you could consider a deeper neural network with multiple layers, use different optimization/solver algorithms, you could modify the Random Forests using different parameter settings for depth and number of trees or enable boosting. Play around with options and choose a setting for RFs and NNs that performs better}
 
 
