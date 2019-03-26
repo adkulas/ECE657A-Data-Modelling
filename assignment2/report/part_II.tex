@@ -41,21 +41,47 @@ The model was then trained on the training data using the hyper parameters found
 \subsubsection{Classify the test set using k-NN, SVM, Random Forests and Neural Networks. Use the chosen parameters from the parameter selection process in question 2 for k-NN and SVM. For the next two classifiers use the default setups listed at the end for Random Forests and Neural Networks}
 
 
-The performance for the four models (KNN, SVM, Random Forest and Neural Network) was calculated using the sklearn library function "classification\_report
+The performance for the four models (KNN, SVM, Random Forest and Neural Network) was calculated using the sklearn library function "classification\_report". We can see the results of the classification in Figure~\ref{fig:resultsknnsvm} and Figure~\ref{fig:resulstsrfnn} below. From the results we can see that the KNN model performed the worst with an average F1 score of 0.75. The SVM model and Neural Network with default parameters performed similarly with and average f1 score of 0.91 and 0.90 respectively. Finally the random forest model out performed the other models with an average f1 score of 0.95.
 
+It is important to mention that there are multiple metrics that can be used to evaluate the performance of a model on a binary classification problem. Depending on the data provided and the use case of the model some outcomes may be more desired that others. For example the true positive rate may be more important for a bank to determine default likelihood because of the impact to their business if a false negative is provided. Knowing this it may be more important to value recall over precision or vice-versa. The f1-score does a decent job of blending the performance of both scenarios and is therefore used in this report as the general metric to evaluate performance between these models.
+
+Overall there is not much variation between the various scoring metrics. This is most likely due to the fact that the data set provided is fairly balanced. The count of the true labels and false labels is quite similar. If the data was imbalanced techniques could have been used to reduce the impact to the models where labels are biased to the majority class. This problem may have been an issue for the classifiers found in part 1 as there was a large imbalance between the majority and minority classes.
+
+% \clearpage{}
 \begin{figure}[!ht]
  \centering
-\includegraphics[width=6.1in]{assignment2/2-3-a1.png}
-\caption{\label{fig:resultsknnsvm} Performance Result for KNN and SVM models using parameters from part 1}
+\includegraphics[height=3.5in]{assignment2/2-3-a1.png}
+\caption{\label{fig:resultsknnsvm} Performance Result for KNN and SVM models using parameters from section 2.2}
 \end{figure}
+\clearpage{}
 \begin{figure}[!ht]
  \centering
-\includegraphics[width=6.1in]{assignment2/2-3-a2.png}
+\includegraphics[height=3.5in]{assignment2/2-3-a2.png}
 \caption{\label{fig:resulstsrfnn} Performance Result for Random Forest and Neural Network models using default parameters}
 \end{figure}
 
 
 \subsubsection{For the fifth and sixth classifiers, you should explore the parameters of the Random Forests and Neural Network models to devise your own classifier instance that does better than the other methods. For example, you could consider a deeper neural network with multiple layers, use different optimization/solver algorithms, you could modify the Random Forests using different parameter settings for depth and number of trees or enable boosting. Play around with options and choose a setting for RFs and NNs that performs better}
+
+Our first goal is to increase the performance of the random forest model in predicting the test subset of the provided data set. Our approach is to use linear search over two important hyper parameters of the random forest model, "n\_estimators" and "treedepth". Figure~\ref{fig:rfnest} below shows the plot of AUC for both the train and test data. We can see from the plot that the performance of the test AUC starts to decrease when n\_estimators reaches a value greater than 100. Based on this result 100 was chosen for the hyper parameter. 
+
+
+\begin{figure}[!ht]
+ \centering
+\includegraphics[width=6.1in]{assignment2/2-3-b-rf(n_estimator).png}
+\caption{\label{fig:rfnest} Random Forest linear search for optimal n\_estimator parameter value}
+\end{figure}
+
+\clearpage{}
+Next, a linear search was done to find the optimal value of tree depth. Figure~\ref{fig:rfnest} below shows the plot of AUC vs tree depth. We can see that the test and train data begin to diverge around a tree depth of 5, however test accuracy increases slightly until tree dept is 13. We decided to use a tree depth of 13 for the hyper parameter value.
+
+\begin{figure}[!ht]
+ \centering
+\includegraphics[width=6.1in]{assignment2/2-3-b-rf(Treedepth).png}
+\caption{\label{fig:rftreedepth} Random Forest linear search for optimal treedepth parameter value}
+\end{figure}
+
+
 
 
 \subsubsection{Repeat each classification method 20 times by varying the split of the training-test set as in question 2-2. Report the average and standard deviation of classification performance on the test set regarding: accuracy, precision, recall, and F- Measure. Also report the training time and classification time of all the methods. Explain why the classification was repeated 20 times}
