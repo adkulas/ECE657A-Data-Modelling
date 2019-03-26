@@ -1,67 +1,29 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
 import seaborn as sns
-import itertools
 import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
-from scipy import stats
 import numpy as np
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
-from sklearn import preprocessing
-from sklearn import neighbors, linear_model
 from sklearn.model_selection import (
     train_test_split,
     GridSearchCV,
     cross_val_score,
     validation_curve,
 )
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.model_selection import KFold
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import (
     classification_report,
     confusion_matrix,
     accuracy_score,
+    roc_auc_score,
     roc_curve,
     auc,
 )
-from sklearn.svm import SVC
 from sklearn.metrics import precision_recall_fscore_support as score
-import pydot
-import os
+from sklearn.metrics import precision_recall_curve
 
-from mlxtend.plotting import plot_learning_curves
-from mlxtend.plotting import plot_decision_regions
+import scikitplot as skplt
 
-import xgboost as xgb
-import lightgbm as lgb
 from skopt import BayesSearchCV
 from sklearn.model_selection import StratifiedKFold
-
-
-# import dataset
-# test_data = "dataset/test.csv"
-# df_test = pd.read_csv(test_data, sep = ',' , index_col = 'ID_code')
-#
-# train_data = "dataset/train.csv"
-# df_train = pd.read_csv(train_data, sep = ',', index_col = 'ID_code')
-#
-# from sklearn.utils import resample
-
-## Separate majority and minority classes
-# df2_majority = df_train[df_train['target']==0]
-# df2_minority = df_train[df_train['target']==1]
-# n_samples = df2_minority.target.sum()
-#
-# df2_majority_downsampled = resample(df2_majority, replace=False, n_samples=n_samples, random_state=99)
-# df_downsampled = pd.concat([df2_majority_downsampled, df2_minority])
-# X_dn = df_downsampled.drop(['target'], axis=1)
-# y_dn = df_downsampled['target']
-#
-# X_train_dn, X_test_dn, y_train_dn, y_test_dn = train_test_split(X_dn,y_dn, test_size=0.93,random_state=101)
 
 
 def cross_validate_model(
@@ -86,7 +48,7 @@ def cross_validate_model(
         search_spaces=search_spaces,
         scoring=scoring,
         cv=StratifiedKFold(n_splits=n_folds, shuffle=True, random_state=42),
-        n_jobs=3,
+        n_jobs=4,
         n_iter=n_iter,
         verbose=0,
         refit=True,
@@ -95,6 +57,49 @@ def cross_validate_model(
     result = bayes_cv_tuner.fit(X, y, callback=status_print)
 
     return result
+
+
+
+def benchmark_model_performance(model, X_test, y_test):
+    y_pred = model.predict(X_test)
+    y_pred_probs = model.predict_proba(X_test)
+    
+    
+    # calculate AUC
+    roc_auc = roc_auc_score(y_test, y_pred_probs[:,1])
+    print(f'AUC: {roc_auc:.3f}')
+    # calculate roc curve
+    fpr, tpr, thresholds = roc_curve(y_test, y_pred_probs[:,1])
+    
+    # calculate precision-recall curve
+    precision, recall, thresholds = precision_recall_curve(y_test, y_pred_probs[:,1])
+    # calculate precision-recall AUC
+    pr_auc = auc(recall, precision)
+    print(f'AUC: {pr_auc:.3f}')
+    
+    # print classification report
+    print(classification_report(y_test, y_pred))
+    
+    
+#    # setup figure
+    fig = plt.figure(figsize=(8,12))
+#    
+#    # plot auc_roc figure
+    ax = fig.add_subplot(211)
+#    ax.plot([0, 1], [0, 1], linestyle='--')
+#    ax.plot(fpr, tpr, marker='.')
+#    ax.annotate('some text',xy=(0.9,0.1))
+    
+    skplt.metrics.plot_roc(y_test, y_pred_probs)
+    
+    # plot precision recall figure
+    ax = fig.add_subplot(212)
+    ax.plot([0, 1], [0.5, 0.5], linestyle='--')
+#    ax.plot(recall, precision, marker='.')
+    plt.show()
+    
+    return plt.gcf()
+
 
 
 if __name__ == "__main__":
@@ -130,7 +135,7 @@ if __name__ == "__main__":
 
     from sklearn.neighbors import KNeighborsClassifier
 
-    neigh = KNeighborsClassifier(n_jobs=-1)
+    neigh = KNeighborsClassifier()
     search_params = {"n_neighbors": (1, 2300), "p": (1, 5), "weights": ("uniform", "distance")}
 
     cv_obj = cross_validate_model(
@@ -138,11 +143,13 @@ if __name__ == "__main__":
         y_train_dn,
         neigh,
         search_spaces=search_params,
-        scoring="f1_macro",
+        scoring="roc_auc",
         n_iter=30,
     )
 
     model = cv_obj.best_estimator_
+    model.fit(X_train_dn, y_train_dn)
     print(model)
+    
     y_pred = model.predict(X_test_dn)
     print(classification_report(y_test_dn, y_pred))
