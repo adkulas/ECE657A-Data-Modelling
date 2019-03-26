@@ -48,7 +48,7 @@ def cross_validate_model(
         search_spaces=search_spaces,
         scoring=scoring,
         cv=StratifiedKFold(n_splits=n_folds, shuffle=True, random_state=42),
-        n_jobs=4,
+        n_jobs=3,
         n_iter=n_iter,
         verbose=0,
         refit=True,
@@ -67,7 +67,7 @@ def benchmark_model_performance(model, X_test, y_test):
     
     # calculate AUC
     roc_auc = roc_auc_score(y_test, y_pred_probs[:,1])
-    print(f'AUC: {roc_auc:.3f}')
+#    print(f'AUC: {roc_auc:.3f}')
     # calculate roc curve
     fpr, tpr, thresholds = roc_curve(y_test, y_pred_probs[:,1])
     
@@ -75,7 +75,7 @@ def benchmark_model_performance(model, X_test, y_test):
     precision, recall, thresholds = precision_recall_curve(y_test, y_pred_probs[:,1])
     # calculate precision-recall AUC
     pr_auc = auc(recall, precision)
-    print(f'AUC: {pr_auc:.3f}')
+#    print(f'AUC: {pr_auc:.3f}')
     
     # print classification report
     print(classification_report(y_test, y_pred))
@@ -85,24 +85,20 @@ def benchmark_model_performance(model, X_test, y_test):
     fig = plt.figure(figsize=(8,12))
 #    
 #    # plot auc_roc figure
-    ax = fig.add_subplot(211)
-#    ax.plot([0, 1], [0, 1], linestyle='--')
-#    ax.plot(fpr, tpr, marker='.')
-#    ax.annotate('some text',xy=(0.9,0.1))
-    
-    skplt.metrics.plot_roc(y_test, y_pred_probs)
+    ax1 = fig.add_subplot(211)    
+    skplt.metrics.plot_roc(y_test, y_pred_probs, ax=ax1)
     
     # plot precision recall figure
-    ax = fig.add_subplot(212)
-    ax.plot([0, 1], [0.5, 0.5], linestyle='--')
-#    ax.plot(recall, precision, marker='.')
-    plt.show()
+    ax2 = fig.add_subplot(212)
+    skplt.metrics.plot_precision_recall(y_test, y_pred_probs, ax=ax2)
+    
+#    plt.show()
     
     return plt.gcf()
 
 
 
-if __name__ == "__main__":
+if __name__ == "__msain__":
     # import dataset
     test_data = "dataset/test.csv"
     df_test = pd.read_csv(test_data, sep=",", index_col="ID_code")
@@ -125,18 +121,18 @@ if __name__ == "__main__":
     y_dn = df_downsampled["target"]
 
     X_train_dn, X_test_dn, y_train_dn, y_test_dn = train_test_split(
-        X_dn, y_dn, test_size=0.83, random_state=101
+        X_dn, y_dn, test_size=0.91, random_state=101
     )
 
     '''
-    EXAMPLE USAGE OF MODULE
+    EXAMPLE USAGE OF MODULE USING KNN
     =============================================
     '''
-
+    
     from sklearn.neighbors import KNeighborsClassifier
 
     neigh = KNeighborsClassifier()
-    search_params = {"n_neighbors": (1, 2300), "p": (1, 5), "weights": ("uniform", "distance")}
+    search_params = {"n_neighbors": (3, 1000), "p": (1,4), "weights": ("uniform", "distance")}
 
     cv_obj = cross_validate_model(
         X_train_dn,
@@ -144,12 +140,12 @@ if __name__ == "__main__":
         neigh,
         search_spaces=search_params,
         scoring="roc_auc",
-        n_iter=30,
+        n_iter=15,
     )
 
     model = cv_obj.best_estimator_
     model.fit(X_train_dn, y_train_dn)
     print(model)
     
-    y_pred = model.predict(X_test_dn)
-    print(classification_report(y_test_dn, y_pred))
+    stats_fig = benchmark_model_performance(model, X_test_dn, y_test_dn)
+    stats_fig.show()
