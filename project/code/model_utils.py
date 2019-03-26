@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -27,7 +28,7 @@ from sklearn.model_selection import StratifiedKFold
 
 
 def cross_validate_model(
-    X, y, clf, search_spaces, scoring="roc_auc", n_folds=3, n_iter=20
+    X, y, clf, search_spaces, scoring="roc_auc", n_folds=3, n_iter=20, n_cpus=3,
 ):
     def status_print(optim_result):
         """Status callback durring bayesian hyperparameter search"""
@@ -48,7 +49,7 @@ def cross_validate_model(
         search_spaces=search_spaces,
         scoring=scoring,
         cv=StratifiedKFold(n_splits=n_folds, shuffle=True, random_state=42),
-        n_jobs=3,
+        n_jobs=n_cpus,
         n_iter=n_iter,
         verbose=0,
         refit=True,
@@ -78,51 +79,58 @@ def benchmark_model_performance(model, X_test, y_test):
 #    print(f'AUC: {pr_auc:.3f}')
     
     # print classification report
-    print(classification_report(y_test, y_pred))
-    
+    report = 'Confusion Matrix:\n' + str(confusion_matrix(y_test, y_pred))
+    report = report + '\n\nClassification Report:\n' + str(classification_report(y_test, y_pred))
     
 #    # setup figure
-    fig = plt.figure(figsize=(8,12))
+    fig = plt.figure(figsize=(6,10))
 #    
 #    # plot auc_roc figure
-    ax1 = fig.add_subplot(211)    
+    ax1 = fig.add_subplot(311)    
     skplt.metrics.plot_roc(y_test, y_pred_probs, ax=ax1)
     
     # plot precision recall figure
-    ax2 = fig.add_subplot(212)
+    ax2 = fig.add_subplot(312)
     skplt.metrics.plot_precision_recall(y_test, y_pred_probs, ax=ax2)
+    
+    #plot stats
+    ax3 = fig.add_subplot(313)
+    ax3.text(0.0, 0.3, report, {'fontsize': 10}, fontproperties = 'monospace')
+    ax3.axis('off')
+    plt.tight_layout()
+    
     
 #    plt.show()
     
-    return plt.gcf()
+    return (plt.gcf(), report)
 
 
 
-if __name__ == "__msain__":
-    # import dataset
-    test_data = "dataset/test.csv"
-    df_test = pd.read_csv(test_data, sep=",", index_col="ID_code")
-
-    train_data = "dataset/train.csv"
-    df_train = pd.read_csv(train_data, sep=",", index_col="ID_code")
-
-    from sklearn.utils import resample
-
-    # Separate majority and minority classes
-    df2_majority = df_train[df_train["target"] == 0]
-    df2_minority = df_train[df_train["target"] == 1]
-    n_samples = df2_minority.target.sum()
-
-    df2_majority_downsampled = resample(
-        df2_majority, replace=False, n_samples=n_samples, random_state=99
-    )
-    df_downsampled = pd.concat([df2_majority_downsampled, df2_minority])
-    X_dn = df_downsampled.drop(["target"], axis=1)
-    y_dn = df_downsampled["target"]
-
-    X_train_dn, X_test_dn, y_train_dn, y_test_dn = train_test_split(
-        X_dn, y_dn, test_size=0.91, random_state=101
-    )
+if __name__ == "__main__":
+#    # import dataset
+#    test_data = "dataset/test.csv"
+#    df_test = pd.read_csv(test_data, sep=",", index_col="ID_code")
+#
+#    train_data = "dataset/train.csv"
+#    df_train = pd.read_csv(train_data, sep=",", index_col="ID_code")
+#
+#    from sklearn.utils import resample
+#
+#    # Separate majority and minority classes
+#    df2_majority = df_train[df_train["target"] == 0]
+#    df2_minority = df_train[df_train["target"] == 1]
+#    n_samples = df2_minority.target.sum()
+#
+#    df2_majority_downsampled = resample(
+#        df2_majority, replace=False, n_samples=n_samples, random_state=99
+#    )
+#    df_downsampled = pd.concat([df2_majority_downsampled, df2_minority])
+#    X_dn = df_downsampled.drop(["target"], axis=1)
+#    y_dn = df_downsampled["target"]
+#
+#    X_train_dn, X_test_dn, y_train_dn, y_test_dn = train_test_split(
+#        X_dn, y_dn, test_size=0.91, random_state=101
+#    )
 
     '''
     EXAMPLE USAGE OF MODULE USING KNN
@@ -143,9 +151,22 @@ if __name__ == "__msain__":
         n_iter=15,
     )
 
+    # get the best estimator from cross validation
     model = cv_obj.best_estimator_
     model.fit(X_train_dn, y_train_dn)
     print(model)
     
-    stats_fig = benchmark_model_performance(model, X_test_dn, y_test_dn)
+#    from sklearn.externals import joblib
+#    # Output a pickle file for the model
+#    joblib.dump(model, 'saved_model.pkl') 
+#     
+#    # Load the pickle file
+#    clf_load = joblib.load('saved_model.pkl')
+    
+    
+    
+    # bench mark the model    
+    stats_fig, report = benchmark_model_performance(model, X_test_dn, y_test_dn)
+    stats_fig.savefig(os.path.join('preliminary-knn-using-downsampled.png'), dpi=300, format='png')
     stats_fig.show()
+
