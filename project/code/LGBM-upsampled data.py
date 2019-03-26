@@ -34,7 +34,7 @@ from imblearn.over_sampling import SMOTE
 
 from mlxtend.plotting import plot_learning_curves
 from mlxtend.plotting import plot_decision_regions
-get_ipython().run_line_magic('matplotlib', 'inline')
+# get_ipython().run_line_magic('matplotlib', 'inline')
 
 from IPython.display import display, HTML
 pd.options.display.max_rows = None
