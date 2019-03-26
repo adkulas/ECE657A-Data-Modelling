@@ -136,7 +136,7 @@ Figure~\ref{fig:fig5} shows the comparison between true/false positive/negative 
 \subsection{Provide a short explanation of the results you have shown and what it means. Which classification method performed better? Why? Contrast performance with classification from the previous homework and comment on the difference, if any}
 In this case, if a customer will subscribe to term deposit at the bank is interpreted as "1"(Yes) and if a customer will not subscribe to term deposit is interpreted as "0"(No).\\
 
-From the confusion matrix we get the True positive values  which represents the number of actual label (1's) predicted correctly as (1's) by our model and false positives(type 1 error) values represents the number of the  actual label (0's) predicted wrongly as (1's) by the model. True negative values represents the number of actual label (0's) predicted correctly as (0's) by our model. False negatives(type ii error) values represents the number of the  actual label (1's) predicted wrongly as (0's) by the model, here the model fails to detect an effect. Based on the bar chart above, we see that the neural network performed better at predicting the true positives compared to decision tress and random forests. Neural network also had the least miss-classification of the false positives.
+From the confusion matrix we get the True positive values  which represents the number of actual label (1's) predicted correctly as (1's) by our model and false positives(type 1 error) values represents the number of the  actual label (0's) predicted wrongly as (1's) by the model. True negative values represents the number of actual label (0's) predicted correctly as (0's) by our model. False negatives(type ii error) values represents the number of the  actual label (1's) predicted wrongly as (0's) by the model, here the model fails to detect an effect. Based on the bar chart above, we see that the neural network performed better at predicting the true positives compared to decision tress and random forests. Neural network also had the least miss-classification of the false Negatives.Generally , given the data set is imbalanced, Neural Network did a good job predicting the highest number of true positives which is of interest. 
 
 
 
@@ -154,7 +154,7 @@ Change your Performance Metric :
  \newline
 Up-sample Minority Class:
 The new data has more observations than the original, and the ratio of the two classes is now 1:1.(3668 observations for both classes).\\
-It is clear that accuracy increased compared to our previous results.This result makes more sense and is a better performance metric
+It is clear that accuracy(94.75,97,95)\% for decision tree,random forest and neural network respectively increased compared to our previous results.This result makes more sense and is a better performance metric
 \begin{figure}[!ht]
  \centering
 \includegraphics[width=6.1in]{assignment2/1-7-barcharts_up.png}
@@ -163,7 +163,7 @@ It is clear that accuracy increased compared to our previous results.This result
 \newline
 Down-sample Majority:
 The new data has less observations than the original, and the ratio of the two classes is now 1:1.(451 observations for both classes).\\
-It is clear that accuracy decreased compared to our previous results. This may be because we decreased the size of our data dramatically.
+It is clear that accuracy(70,71,64)\% for decision tree,random forest and neural network respectively decreased compared to our previous results. This may be because we decreased the size of our data dramatically.
 \begin{figure}[!ht]
  \centering
 \includegraphics[width=6.1in]{assignment2/1-7-barcharts_dn.png}
