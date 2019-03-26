@@ -144,16 +144,19 @@ Each classification method was repeated 20 times for each value of k in \{4,5,6,
 \caption{\label{fig:run6} Neural Network with tuned parameters performance metrics over 20 iterations of cross validation for different k folds}
 \end{figure}
 
-
-
+\clearpage{}
+Classification was repeated 20 times for the 6 models to get accurate measurements of the performance metrics recorded. The execution times for the algorithms can vary quite a bit depending on the system cpu usage and resources. Multiple threads running on the machine may take cpu clock cycles and delay algorithms from finishing the queued jobs. This is validated by the data collected. The standard deviation for the training time metric is the highest of all the recorded metrics. This is consistent with all algorithms.
 
 \subsection{Obtained Results}
 
-
 Based on the results obtained above, we see that k-NN performed the worst overall in terms of accuracy, precision, recall and f measure, however, it was the fastest in terms of training the model. Random forest with the tuned parameters performed the best among all, however, slower compared to Neural networks in terms of classification time. 
-Neural networks in the other hand is the fastest at classifying but the slowest in training the model. SVM provided a good metrics measurements compared to knn but it took much more time to train the model and to classify. The tuned parameters for random forests and neural network performed significantly compared to their default hyperparameters. From this assignmnet, we can conclude that the Neural network and random forest are by far the best models for this type of dataset when they are tuned. 
+
+Neural networks in the other hand is the fastest at classifying but the slowest in training the model. SVM provided good metrics measurements compared to kNN but it took much more time to train the model and to classify. The tuned parameters for random forests and neural network performed significantly compared to their default hyper parameters. From this assignment, we can conclude that the Neural network and random forest are by far the best models for this type of data set when they are tuned. 
+
+The information collected could be useful in determining which method to use for a similar data set in the future. First of all the performance of the models could be used to determine if the the model selected will meet the required accuracy for the application. training time and classification time are useful metrics to determine if the model selected will train or converge with the given resources or if predictions will be made quick enough (for example, real-time applications). Since our data set was fairly balanced the tables do not indicate which methods handle data imbalances better than others, however if these benchmarks were run once again with an imbalanced set more conclusions could be made.
 
 
 
 \subsection{Feature Removal}
-We can remove the redundant feature from the dataset, Attributes that are not necessary decrease training speed,also tend to decrease our model's performance, most importantly,also generalization on the the test's performance is reduced.
+We can remove the redundant feature from the data set, Attributes that are not necessary decrease training speed,also tend to decrease our model's performance, most importantly,also generalization on the the test's performance is reduced.
+I think with no prior domain knowledge about the data set and information we might have about the relationships between features, classification on two dimensions might result in a biased model. A brute force approach could be taken to systematically remove one feature at a time to determine feature importances for different models. 
