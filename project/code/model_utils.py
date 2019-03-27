@@ -63,8 +63,7 @@ def cross_validate_model(
 
 def benchmark_model_performance(model, X_test, y_test):
     y_pred = model.predict(X_test)
-    y_pred_probs = model.predict_proba(X_test)
-    
+    y_pred_probs = model.predict_proba(X_test)    
     
     # calculate AUC
     roc_auc = roc_auc_score(y_test, y_pred_probs[:,1])
