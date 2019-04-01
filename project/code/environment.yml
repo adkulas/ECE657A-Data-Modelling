@@ -1,4 +1,4 @@
-name: base
+name: mlenv
 channels:
   - conda-forge
   - anaconda
@@ -117,7 +117,6 @@ dependencies:
   - libiconv=1.15=h1df5818_7
   - libpng=1.6.36=h2a8f88b_0
   - libsodium=1.0.16=h9d3ae62_0
-  - libssh2=1.8.2=h642c060_0
   - libtiff=4.0.9=h36446d0_2
   - libxgboost=0.80=0
   - libxml2=2.9.8=hadb2253_1

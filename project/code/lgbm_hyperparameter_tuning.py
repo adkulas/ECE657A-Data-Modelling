@@ -133,8 +133,8 @@ def run_trials():
         "min_child_samples": hp.quniform(
             "min_child_samples", 5, 500, 5
         ),  # min_data_in_leaf
-        "lambda_l1": hp.uniform("lambda_l1", 0.0, 1.0),
-        "lambda_l2": hp.uniform("lambda_l2", 0.0, 1.0),
+        "lambda_l1": hp.uniform("lambda_l1", 0.0, 10.0),
+        "lambda_l2": hp.uniform("lambda_l2", 0.0, 10.0),
         "feature_fraction": hp.uniform("feature_fraction", 0.6, 1.0),
     }
 
