@@ -74,15 +74,22 @@ For the data preprocessing, missing values were checked first and there was no m
 
 \section{exploratory data analysis (EDA)}
 EDA refers to the critical process of performing initial investigations on data so as to discover patterns,to spot anomalies,to test hypothesis and to check assumptions with the help of summary statistics and graphical representations [reference: https://towardsdatascience.com/exploratory-data-analysis-8fc1cb20fd15].
-The first part of the EDA was checking for linear correlation between the features. Those identified relationship should be removed during feature selection as they effect some of the models such linear regression. However, for this specific dataset it was foound that all 200 features had a correlation coefficient value between -0.1 and 0.1, which indicates that there is no linear relationship between those 200 features. The heatmap (figure~\ref{fig:fig1}) below shows the results of correlation in which it can be observed that its almost zero. 
-
+The first part of the EDA was checking for linear correlation between the features. Those identified relationship should be removed during feature selection as they effect some of the models such linear regression. However, for this specific dataset it was foound that all 200 features had a correlation coefficient value between -0.1 and 0.1, which indicates that there is no linear relationship between those 200 features. The heatmap (figure~\ref{fig:fig1}) below shows the results of correlation in which it can be observed that it is almost zero. 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=4.1in]{}
+  \includegraphics[width=3.8in]{project/code/heatmap.png}
   \caption{Heatmap for correlation}
   \label{fig:fig1}
 \end{figure}
 
+Since there are 200 features, it is a bit difficult to plot histograms and box plots for all those features, however, to make the task easier, PCA was first used reduce the dimensionality. When running the PCA (figure~\ref{fig:fig2} below), it can be observed that almost all of the 200 features are required to explain 95\% of the variance. Examining the PCA plot, it is possible that the provider of the dataset already have done some preprocessing techniques, PCA possibly. 
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=4.1in]{project/code/1-pcafeatures.png}
+  \caption{PCA}
+  \label{fig:fig2}
+\end{figure}
+Next thing was to build a simple random forest model to extract important features and possibly providing more insights to the dataset. 
 
 
 \section{Project Goal}
