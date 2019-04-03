@@ -77,7 +77,7 @@ EDA refers to the critical process of performing initial investigations on data 
 The first part of the EDA was checking for linear correlation between the features. Those identified relationship should be removed during feature selection as they effect some of the models such linear regression. However, for this specific dataset it was foound that all 200 features had a correlation coefficient value between -0.1 and 0.1, which indicates that there is no linear relationship between those 200 features. The heatmap (figure~\ref{fig:fig1}) below shows the results of correlation in which it can be observed that it is almost zero. 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=3.8in]{project/code/heatmap.png}
+  \includegraphics[width=3.6in]{project/code/heatmap.png}
   \caption{Heatmap for correlation}
   \label{fig:fig1}
 \end{figure}
@@ -85,30 +85,32 @@ The first part of the EDA was checking for linear correlation between the featur
 Since there are 200 features, it is a bit difficult to plot histograms and box plots for all those features, however, to make the task easier, PCA was first used reduce the dimensionality. When running the PCA (figure~\ref{fig:fig2} below), it can be observed that almost all of the 200 features are required to explain 95\% of the variance. Examining the PCA plot, it is possible that the provider of the dataset already have done some preprocessing techniques, PCA possibly. 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=4.1in]{project/code/1-pcafeatures.png}
+  \includegraphics[width=3.8in]{project/code/1-pcafeatures.png}
   \caption{PCA}
   \label{fig:fig2}
 \end{figure}
-Next thing was to build a simple random forest model to extract important features and possibly providing more insights to the dataset. 
-
-
-\section{Project Goal}
-
+Next thing was to build a simple random forest model to extract important features and possibly providing more insights to the dataset. Doing this reduce the amount of time examining all the 200 features and only focus on those top 10 features. GridSearch was used to for finding the best parameters for the random forest. Figure~\ref{fig:fig3} below shows the top 10 features returned from the random forest model. 
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=3.8in]{project/code/important features.png}
+  \caption{Important features from random forest model}
+  \label{fig:fig3}
+\end{figure}
+Histograms were plotted for those top features as shown below. The orange distribution is for the varaible in the train dataset and the green one corresponds to the same variable in the test dataset. Comparing those features from the train and the test sets gives an insight about the scoring for test set. More specifically, the test data does not have target so this means that prediction has to be formatted into csv file and submitted online for AUC-ROC score. However, what this distributions shows is that the train and test sets are almost similar in the distribution which means that it is possible to split the train.csv data in test and train and the cross validation (CV) score obtained in the local machine should be approximately similar to the AUC-ROC score obtained when submitted online. This give a way around the limitation of having 3 submissions a day by evaluating the model performance in the local machine using the CV score. 
 
 
 
 \section{Used Methods in the Project}
+As stated earlier, benchmark models were first created. The first two models considered here were naive bayes and logistic regression. The reason behind the choice is because these two models are simple to implement as they have a minimal number of hyper-parameters tuning. The next two models considered where XGBoost and LGBM. More in depth high level explanation of these models is followed.  
 
-
-\subsection{Naive Bayes}
-
-
+\subsection{Naive Bayes classifier}
+It is a probabilistic machine learning model based on the Bayes theorem with an assumption of independence among the features. Main advantage of this model is that it can be easily trained on small datasets. Although the dataset used in this project is somewhat large, it was downsampled (more explanation will be followed in the later section). Also, the data size was reduced further when splitting the downsampled data into train and test. Both of these helped in providing the initial setup of having a good performing naive bayes model. 
 
 \subsection{Logistic Regression}
-
+Logistic regression is a regression analysis that can be used for predictions when the target variable is dichotomous (binary). It is used to describe data and to explain the relationship between one dependent binary variable and one or more nominal, ordinal, interval or ratio-level independent variables [reference: https://www.statisticssolutions.com/what-is-logistic-regression/].
 
 \subsection{XGBOOST}
-
+XGBoost is a library for developing fast and high performance gradient boosting tree models and can be used a standalone predictor. 
 
 \subsection{LGBM}
 
@@ -120,15 +122,8 @@ Next thing was to build a simple random forest model to extract important featur
 
 
 
-\subsection{Checking Your Figures: The IEEE Graphics Analyzer}
-located at
-\underline{http://graphicsqc.ieee.org/}, allows authors to 
-
-
-
-
 \subsection{Color Processing/Printing in IEEE Journals}
-IEEE Xplore\textregistered\ at no charge, 
+IEEE Xplore\textregistered\ at no charge, \underline{http://graphicsqc.ieee.org/}, allows authors to 
 
 \section{Conclusion}
 A conclusion section is not required. Although a conclusion may review the 
