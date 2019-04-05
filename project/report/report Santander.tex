@@ -26,7 +26,7 @@ This paper lays down the process and detailed approach attempted to solve a bina
 \end{abstract}
 
 \begin{IEEEkeywords}
-Binary classification, Boosting, Ensembling, Machine learning, Naive Bayes, lgbm, logistic regression, XGBoost
+Binary classification, Ensembling, gradient boosting, Machine learning, Naive Bayes, lgbm, logistic regression, XGBoost
 
 \end{IEEEkeywords}
 
@@ -42,13 +42,12 @@ The dataset used in this project is provided by Santander and can be downloaded 
 
 \section{Survey review on the dataset}
 
+\\
 
 \section{Challenges in the dataset}
-Fully anonymized dataset.\\
-Imbalance dataset.
 
-
-
+There are several challenges in the dataset that need to be overcome before analyzing the dataset. First, the fully anonymized  features is one of the most significant challenges in the current dataset.  Another challenge is the imbalance in the data since one of the class, which is 89.5\% of the data, is larger than the other class of 10.5\%.
+Table 1 shows the imbalance in the data.
 
 \begin{center}
  \begin{tabular}{||c c c c||} 
@@ -85,23 +84,34 @@ The first part of the EDA was checking for linear correlation between the featur
 Since there are 200 features, it is a bit difficult to plot histograms and box plots for all those features, however, to make the task easier, PCA was first used reduce the dimensionality. When running the PCA (figure~\ref{fig:fig2} below), it can be observed that almost all of the 200 features are required to explain 95\% of the variance. Examining the PCA plot, it is possible that the provider of the dataset already have done some preprocessing techniques, PCA possibly. 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=3.8in]{project/code/1-pcafeatures.png}
+  \includegraphics[width=3.6in]{project/code/1-pcafeatures.png}
   \caption{PCA}
   \label{fig:fig2}
 \end{figure}
 Next thing was to build a simple random forest model to extract important features and possibly providing more insights to the dataset. Doing this reduce the amount of time examining all the 200 features and only focus on those top 10 features. GridSearch was used to for finding the best parameters for the random forest. Figure~\ref{fig:fig3} below shows the top 10 features returned from the random forest model. 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=3.8in]{project/code/important features.png}
+  \includegraphics[width=3.6in]{project/code/important features.png}
   \caption{Important features from random forest model}
   \label{fig:fig3}
 \end{figure}
-Histograms were plotted for those top features as shown below. The orange distribution is for the varaible in the train dataset and the green one corresponds to the same variable in the test dataset. Comparing those features from the train and the test sets gives an insight about the scoring for test set. More specifically, the test data does not have target so this means that prediction has to be formatted into csv file and submitted online for AUC-ROC score. However, what this distributions shows is that the train and test sets are almost similar in the distribution which means that it is possible to split the train.csv data in test and train and the cross validation (CV) score obtained in the local machine should be approximately similar to the AUC-ROC score obtained when submitted online. This give a way around the limitation of having 3 submissions a day by evaluating the model performance in the local machine using the CV score. 
+
+Histograms were plotted for those top features as shown in figure~\ref{fig:fig4} below.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=3.1in]{"project/code/Histograms dist. of features".png}
+  \caption{Histograms for the top 2 features}
+  \label{fig:fig4}
+\end{figure}
+
+
+The orange distribution is for the varaible in the train dataset and the green one corresponds to the same variable in the test dataset. Comparing those features from the train and the test sets gives an insight about the scoring for test set. More specifically, the test data does not have target so this means that prediction has to be formatted into csv file and submitted online for AUC-ROC score. However, what this distributions shows is that the train and test sets are almost similar in the distribution which means that it is possible to split the train.csv data in test and train and the cross validation (CV) score obtained in the local machine should be approximately similar to the AUC-ROC score obtained when submitted online. This give a way around the limitation of having 3 submissions a day by evaluating the model performance in the local machine using the CV score. 
 
 
 
 \section{Used Methods in the Project}
-As stated earlier, benchmark models were first created. The first two models considered here were naive bayes and logistic regression. The reason behind the choice is because these two models are simple to implement as they have a minimal number of hyper-parameters tuning. The next two models considered where XGBoost and LGBM. More in depth high level explanation of these models is followed.  
+As stated earlier, benchmark models were first created. The first two models considered here were naive bayes and logistic regression. The reason behind the choice is because these two models are simple to implement as they have a minimal number of hyper-parameters tuning. The next two models considered where XGBoost and LGBM which are tree based learning algorithms. More high level explanation of these models is followed.  
 
 \subsection{Naive Bayes classifier}
 It is a probabilistic machine learning model based on the Bayes theorem with an assumption of independence among the features. Main advantage of this model is that it can be easily trained on small datasets. Although the dataset used in this project is somewhat large, it was downsampled (more explanation will be followed in the later section). Also, the data size was reduced further when splitting the downsampled data into train and test. Both of these helped in providing the initial setup of having a good performing naive bayes model. 
@@ -109,27 +119,29 @@ It is a probabilistic machine learning model based on the Bayes theorem with an 
 \subsection{Logistic Regression}
 Logistic regression is a regression analysis that can be used for predictions when the target variable is dichotomous (binary). It is used to describe data and to explain the relationship between one dependent binary variable and one or more nominal, ordinal, interval or ratio-level independent variables [reference: https://www.statisticssolutions.com/what-is-logistic-regression/].
 
-\subsection{XGBOOST}
-XGBoost is a library for developing fast and high performance gradient boosting tree models and can be used a standalone predictor. 
+\subsection{Boosting Algorithms}
+In order to understand XGBoost and lgbm, the term gradient descent and gradient boosting must be understood first. Starting with gradient descent, it uses a cost function to measure how close the predicted values are to the actual values. It is desirable to have as little difference as possible between the predicted values and the actual values, other words, minimizing the cost function. This is done by associating weights with the trained models, therefore, the better weights associated with the model, the more accurate predicted outcome are and the cost function will be lower as well. Gradient Descent is an iterative optimization algorithm in which these associated weights are learned and then updated to minimize the cost function. \\
+On the other hand, gradient boosting combines the principle of gradient descent and boosting to a supervised learning models(ref: https://www.kdnuggets.com/2017/10/xgboost-concise-technical-overview.html). The idea of boosting is that a set of an ensemble of weak learners built where the wrongly predicted records are given a higher weights (boosted) so that the next model will pay more attention to those misclassifed labels and will try to correctly predict them. This technique converts a group of week learners into a single strong learner. Both XGBoost and LGBM are tree based models in which they take gradient boosting into higher level by adding more functionalities to have a greater performance and higher speed. 
 
-\subsection{LGBM}
+\\
 
-
-
-
-
-
+\subsubsection{XGBOOST (eXtreme Gradient Boosting)}
+XGBoost is a library for developing fast and high performance gradient boosting tree models and can be used a standalone predictor. It is an advanced implementation of the gradient boosting algorithms. The main key features of XGBoost is scalability, which drives fast learning through parallel and distributed computing and offers efficient memory usage (ref: https://www.analyticsvidhya.com/blog/2018/09/an-end-to-end-guide-to-understand-the-math-behind-xgboost/). There are several systems and algorithmic optimizations made on the XGBoost that made the scalability feature possible. This includes: a novel tree learning algorithm is for handling sparse data and a theoretically justified weighted quantile sketch procedure enables handling instance weights in approximate tree learning (reference: ). XGBoost enables parallel and distributed computing which makes learning faster which enables quicker model exploration (reference: ). More importantly, XGBoost take advantage of out-of-core computation and enables data scientists to process hundred millions of examples on a desktop (reference: ). 
 
 
 
-\subsection{Color Processing/Printing in IEEE Journals}
-IEEE Xplore\textregistered\ at no charge, \underline{http://graphicsqc.ieee.org/}, allows authors to 
+\subsubsection{LGBM}
+
+
+
+
 
 \section{Conclusion}
 A conclusion section is not required. Although a conclusion may review the 
 main points of the paper, do not replicate the abstract as the conclusion. A 
 conclusion might elaborate on the importance of the work or suggest 
 applications and extensions. 
+IEEE Xplore\textregistered\ at no charge, \underline{http://graphicsqc.ieee.org/}, allows authors to 
 
 \appendices
 
@@ -143,40 +155,39 @@ Appendixes, if needed, appear before the acknowledgment.
 
 \subsection{References}
 
+\nocite{*}
+\bibliographystyle{IEEEtran}
+\bibliography{ref}
 
 
+% \begin{thebibliography}{00}
+
+% \bibitem{b1} G. O. Young, ``Synthetic structure of industrial plastics,'' in \emph{Plastics,} 2\textsuperscript{nd} ed., vol. 3, J. Peters, Ed. New York, NY, USA: McGraw-Hill, 1964, pp. 15--64.
+
+% \bibitem{b2} W.-K. Chen, \emph{Linear Networks and Systems.} Belmont, CA, USA: Wadsworth, 1993, pp. 123--135.
+
+% \bibitem{b3} J. U. Duncombe, ``Infrared navigation---Part I: An assessment of feasibility,'' \emph{IEEE Trans. Electron Devices}, vol. ED-11, no. 1, pp. 34--39, Jan. 1959, 10.1109/TED.2016.2628402.
+
+% \bibitem{b4} E. P. Wigner, ``Theory of traveling-wave optical laser,'' \emph{Phys. Rev}., vol. 134, pp. A635--A646, Dec. 1965.
+
+% \bibitem{b5} E. H. Miller, ``A note on reflector arrays,'' \emph{IEEE Trans. Antennas Propagat}., to be published.
+
+% \bibitem{b6} E. E. Reber, R. L. Michell, and C. J. Carter, ``Oxygen absorption in the earth's atmosphere,'' Aerospace Corp., Los Angeles, CA, USA, Tech. Rep. TR-0200 (4230-46)-3, Nov. 1988.
+
+% \bibitem{b7} J. H. Davis and J. R. Cogdell, ``Calibration program for the 16-foot antenna,'' Elect. Eng. Res. Lab., Univ. Texas, Austin, TX, USA, Tech. Memo. NGL-006-69-3, Nov. 15, 1987.
+
+% \bibitem{b8} \emph{Transmission Systems for Communications}, 3\textsuperscript{rd} ed., Western Electric Co., Winston-Salem, NC, USA, 1985, pp. 44--60.
+
+% \bibitem{b9} \emph{Motorola Semiconductor Data Manual}, Motorola Semiconductor Products Inc., Phoenix, AZ, USA, 1989.
+
+% \bibitem{b10} G. O. Young, ``Synthetic structure of industrial
+% plastics,'' in Plastics, vol. 3, Polymers of Hexadromicon, J. Peters,
+% Ed., 2\textsuperscript{nd} ed. New York, NY, USA: McGraw-Hill, 1964, pp. 15-64.
+% [Online]. Available:
+% \underline{http://www.bookref.com}.
 
 
-
-\begin{thebibliography}{00}
-
-\bibitem{b1} G. O. Young, ``Synthetic structure of industrial plastics,'' in \emph{Plastics,} 2\textsuperscript{nd} ed., vol. 3, J. Peters, Ed. New York, NY, USA: McGraw-Hill, 1964, pp. 15--64.
-
-\bibitem{b2} W.-K. Chen, \emph{Linear Networks and Systems.} Belmont, CA, USA: Wadsworth, 1993, pp. 123--135.
-
-\bibitem{b3} J. U. Duncombe, ``Infrared navigation---Part I: An assessment of feasibility,'' \emph{IEEE Trans. Electron Devices}, vol. ED-11, no. 1, pp. 34--39, Jan. 1959, 10.1109/TED.2016.2628402.
-
-\bibitem{b4} E. P. Wigner, ``Theory of traveling-wave optical laser,'' \emph{Phys. Rev}., vol. 134, pp. A635--A646, Dec. 1965.
-
-\bibitem{b5} E. H. Miller, ``A note on reflector arrays,'' \emph{IEEE Trans. Antennas Propagat}., to be published.
-
-\bibitem{b6} E. E. Reber, R. L. Michell, and C. J. Carter, ``Oxygen absorption in the earth's atmosphere,'' Aerospace Corp., Los Angeles, CA, USA, Tech. Rep. TR-0200 (4230-46)-3, Nov. 1988.
-
-\bibitem{b7} J. H. Davis and J. R. Cogdell, ``Calibration program for the 16-foot antenna,'' Elect. Eng. Res. Lab., Univ. Texas, Austin, TX, USA, Tech. Memo. NGL-006-69-3, Nov. 15, 1987.
-
-\bibitem{b8} \emph{Transmission Systems for Communications}, 3\textsuperscript{rd} ed., Western Electric Co., Winston-Salem, NC, USA, 1985, pp. 44--60.
-
-\bibitem{b9} \emph{Motorola Semiconductor Data Manual}, Motorola Semiconductor Products Inc., Phoenix, AZ, USA, 1989.
-
-\bibitem{b10} G. O. Young, ``Synthetic structure of industrial
-plastics,'' in Plastics, vol. 3, Polymers of Hexadromicon, J. Peters,
-Ed., 2\textsuperscript{nd} ed. New York, NY, USA: McGraw-Hill, 1964, pp. 15-64.
-[Online]. Available:
-\underline{http://www.bookref.com}.
-
-
-
-\end{thebibliography}
+% \end{thebibliography}
 
 
 
