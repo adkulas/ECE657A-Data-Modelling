@@ -5,6 +5,8 @@
 \usepackage{algorithmic}
 \usepackage{graphicx}
 \usepackage{textcomp}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \markboth{\journalname, VOL. XX, NO. XX, XXXX 2017}
@@ -22,13 +24,16 @@ a272ahme@uwaterloo.ca \\\centerline{roozara@uwaterloo.ca}}
 
 \begin{abstract}
 This paper lays down the process and detailed approach attempted to solve a binary classification problem presented by Santander bank. Different machine learning algorithms were explored and implemented and comparison was made among them. All the programming was done in python using different libraries and packages. The paper focuses more on the application oriented domain (high level implementation and evaluation of the chosen models) and does not cover in depth explanation of those implemented algorithms. 
-
 \end{abstract}
 
 \begin{IEEEkeywords}
 Binary classification, Ensembling, gradient boosting, Machine learning, Naive Bayes, lgbm, logistic regression, XGBoost
-
 \end{IEEEkeywords}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% INTRODUCTION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Introduction}
 \label{sec:introduction}
@@ -36,44 +41,151 @@ Binary classification, Ensembling, gradient boosting, Machine learning, Naive Ba
 
 \subsection{Abbreviations and Acronyms}
 CV score = Cross Validation score \\
+XGBoost = Extreme Gradient Boosting  \\
+LGBM = Light Gradient Boosting Model \\
+PCA = Principal Component Analysis \\
+AUC = Area Under the Curve \\
+ROC = Receiver Operator Characteristics \\
+SMOTE = Synthetic Minority Oversampling Technique 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Description of the data
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Description of the data}
-The dataset used in this project is provided by Santander and can be downloaded from kaggle.com. There are two main files: train.csv which contains the training set and the test.csv which contains the test set. The size of the train.csv is 200k x 201 (40,200,000 data points) and for the tain.csv is 200k x 202 (40,000,000 data points). The train.csv has the attributes: binary target column, string ID\_code column, and the numeric feature variables (var0 till var 199) while the test.csv contains the string ID\_code and the numeric feature variables, so the task is to predict the value of target column in the test set. The datasets are fully anonymized. Test labels (target) is private - predicted results must be submitted online and submissions are evaluated on area under the ROC curve between the predicted probability and the observed target. Lastly, there are three submissions resets every 24hrs.
-
-\section{Survey review on the dataset}
+The dataset used in this project is provided by Santander and can be downloaded from kaggle.com. There are two main files: train.csv which contains the training set and the test.csv which contains the test set. The size of the train.csv is 200k x 201 (40,200,000 data points) and for the tain.csv is 200k x 202 (40,000,000 data points). The train.csv has the attributes: binary target column, string ID\_code column, and the numeric feature variables (var0 till var 199) while the test.csv contains the string ID\_code and the numeric feature variables, so the task is to predict the value of target column in the test set. 
 
 \\
-
-\section{Challenges in the dataset}
-
-There are several challenges in the dataset that need to be overcome before analyzing the dataset. First, the fully anonymized  features is one of the most significant challenges in the current dataset.  Another challenge is the imbalance in the data since one of the class, which is 89.5\% of the data, is larger than the other class of 10.5\%.
-Table 1 shows the imbalance in the data.
-
-\begin{center}
- \begin{tabular}{||c c c c||} 
- \hline
- Target Variable & Percentage \\ [0.5ex] 
- \hline\hline
- 0 & 89.5  \\ 
- \hline
- 1 & 10.5 \\[1ex]
- \hline
-\end{tabular}
-\end{center}
+\\
+move to another section
+The datasets are fully anonymized. Test labels (target) is private - predicted results must be submitted online and submissions are evaluated on area under the ROC curve between theDownload
 
 
 
 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% LITERATURE REVIEW
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Literature Review}
 
-\section{Preprocessing}
-For the data preprocessing, missing values were checked first and there was no missing values found. However, the proportion of the data imbalance found was significant with 89.95\% (179,902 samples) of the target label in the train.csv were classified as 0 as compared to 10.05\% of the data labeled as 1 (20,098 samples). This means that there are two options that should be considered, either up-sample minority class or down-sample majority class. Most cases, down sampling is the optimal option, however, there are some cases were upsampling gives an optimal results over the downsampling depending on the type of the dataset. Another options (besides up and downsampling) are either changing the perfomance metrics or penalize algorithms (Cost-Sensitive Training). As far as this project is concerned, both upsampling and downsampling were performed to compare the results. Lastly, the data was normalized using z-score normalization. Even though not all models need a normalized data (such as XGBoost and LGBM), normalizing for all models helps in making a fair evaluation and comparison of the performances of those models. 
+\subsection{Bayesian optimization}
+In general, the motivation for using an Bayesian optimizer is to optimize the model jointly that leads to improving the model outcome significantly ~\cite{shahriari2016taking}. When building models to solve the binary classification problems, certain techniques may have many model parameters. XGBoost and LGBM are random forest classifiers that each have over 60 parameters to tune/optimize. Bayesian optimization techniques is one of the most powerful and efficient approaches adapted in terms of the number of function evaluations required ~\cite{brochu2010tutorial}. As mentioned in  ~\cite{brochu2010tutorial}, this efficiency is due to the fact that Bayesian optimization is able to incorporate prior belief about the problem to help direct the sampling, and to trade off the exploration and exploitation of the search space. Unlike Gridsearch optimization where it tries every single combination that results in improving the model outcomes. Gridsearch would have resulted in a tremendous computational power and time. For this reason Bayesian optimization was the optimal choice for our project. 
+
+\subsection{SMOTE - Synthetic Minority Over-sampling Technique}
+%SMOTE lit review
 
 
-\section{exploratory data analysis (EDA)}
-EDA refers to the critical process of performing initial investigations on data so as to discover patterns,to spot anomalies,to test hypothesis and to check assumptions with the help of summary statistics and graphical representations [reference: https://towardsdatascience.com/exploratory-data-analysis-8fc1cb20fd15].
-The first part of the EDA was checking for linear correlation between the features. Those identified relationship should be removed during feature selection as they effect some of the models such linear regression. However, for this specific dataset it was foound that all 200 features had a correlation coefficient value between -0.1 and 0.1, which indicates that there is no linear relationship between those 200 features. The heatmap (figure~\ref{fig:fig1}) below shows the results of correlation in which it can be observed that it is almost zero. 
+
+%maybe need to add literature review on unbalanaced datasets see: https://www3.nd.edu/~dial/publications/chawla2004editorial.pdf
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Proposed Methodology - Strategy/Methodology (What was our plan)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Proposed Strategy/Methodology}
+In order to develop a model and strategy that would perform well on the competition's data-set, a standard data science work flow was adopted. Multiple steps are common in the process of solving similar problems ~\cite{tandel_2017}. These steps include: data cleaning, data exploration, initial models, feature engineering, and hyper-parameters tuning. It is important to mention that these steps are not immutable and change depending on the problem definition.
+
+\tikzstyle{process} = [rectangle, minimum width=-0.5cm, minimum height=1cm,text centered,text width=2cm, draw=black, fill=orange!30]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+\begin{tikzpicture}[node distance=2cm]
+\node (1) [process] {Sourcing Data};
+\node (2) [process, below of= 1] {Preprocessing}
+\node (3) [process, below of= 2] {EDA}
+\node (4) [process, below of= 3] {Feature Engineering}
+\node (5) [process, below of= 4] {Classification}
+\node (6) [process, below of= 5] {Evaluation}
+
+\draw [arrow] (1) -- (2)
+\draw [arrow] (2) -- (3)
+\draw [arrow] (3) -- (4)
+\draw [arrow] (4) -- (5)
+\draw [arrow] (5) -- (6)
+
+\end{tikzpicture}
+
+In this project, we setup premilinary models by  classifying the data using different machine-learning algorithms to predict which customer makes a transaction. This results forms our benchmark on which 
+
+
+
+
+%testing up sampling vs downsampling
+
+
+
+
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                            % Subsection/ EDA
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Explotary Data Analyis}
+EDA refers to the critical process of performing initial investigations on data so as to discover patterns,to spot anomalies,to test hypothesis and to check assumptions with the help of summary statistics and graphical representations ~\cite{patil_patil_2018}.
+
+
+
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                            % Subsection/ Key features of the chosen models
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Key features of the chosen models}
+As stated earlier, benchmark models were first created. The first two models considered here were naive bayes and logistic regression. The reason behind the choice is because these two models are simple to implement as they have a minimal number of hyper-parameters tuning. Having a benchmark models helped in having a starting point and to get the feel of the dataset. The next two models considered where XGBoost and LGBM which are tree based learning algorithms. More high level explanation of these models is followed.  
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                            % Subsection/ Naive Bayes classifier
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                        
+\subsubsection{Naive Bayes classifier}
+It is a probabilistic machine learning model based on the Bayes theorem with an assumption of independence among the features.This  conditional independence  assumption  rarely  holds  true  in  real world  applications,  hence  the  characterization  as Naive yet the algorithm tends to perform well and learn  rapidly  in  various  supervised classification problems~\cite{dimitoglou2012comparison}. Main advantage of this model is that it can be easily trained on small datasets. Although the dataset used in this project is somewhat large, it was downsampled (more explanation will be followed in the later section). Also, the data size was reduced further when splitting the downsampled data into train and test. Both of these helped in providing the initial setup of having a good performing naive bayes model. 
+
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                            % Subsection/ Logistic Regression
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                        
+\subsubsection{Logistic Regression}
+Logistic regression is a regression analysis that can be used for predictions when the target variable is dichotomous (binary). It is used to describe data and to explain the relationship between one dependent binary variable and one or more nominal, ordinal, interval or ratio-level independent variables ~\cite{statisticssolutions}. The advantage of logistic regression is that its simple to implement with very few parameters.
+
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                            % Subsection/ Boosting Algorithms
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Boosting Algorithms}
+In order to understand XGBoost and lgbm functionalities, the term gradient descent and gradient boosting had be understood first. 
+Starting with gradient descent, it uses a cost function to measure how close the predicted values are to the actual values. It is desirable to have as little difference as possible between the predicted values and the actual values, other words, minimizing the cost function. This is done by associating weights with the trained models, therefore, the better weights associated with the model, the more accurate predicted outcome are and the lower the cost function as well. To summarize, gradient descent is an iterative optimization algorithm in which these associated weights are learned and then updated to minimize the cost function. \\
+On the other hand, gradient boosting combines the principle of gradient descent and boosting to a supervised learning models(ref: ). The idea of boosting is that a set of an ensemble of weak learners built where the wrongly predicted records are given a higher weights (boosted) so that the next model will pay more attention to those misclassifed labels and will try to predict them correctly. This technique converts a group of week learners into a single strong learner. Both XGBoost and LGBM are tree based models in which they take gradient boosting into higher level by adding more functionalities to have a greater performance and higher speed. 
+
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                            % Subsection/ XGBOOST (eXtreme Gradient Boosting)
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{XGBOOST- eXtreme Gradient Boosting}
+XGBoost is a library for developing fast and high performance gradient boosting tree models and can be used as a standalone predictor. It is an advanced implementation of the gradient boosting algorithms. The main key features of XGBoost is scalability, which drives fast learning through parallel and distributed computing and offers efficient memory usage ~\cite{kdnuggets_analytics_big_data_data_mining_and_data_science}. There are several systems and algorithmic optimizations made on the XGBoost that made the scalability feature possible. This includes: a novel tree learning algorithm is for handling sparse data and a theoretically justified weighted quantile sketch procedure enables handling instance weights in approximate tree learning ~\cite{kdnuggets_analytics_big_data_data_mining_and_data_science}. XGBoost enables parallel and distributed computing which makes learning faster which enables quicker model exploration ~\cite{kdnuggets_analytics_big_data_data_mining_and_data_science}. More importantly, XGBoost take advantage of out-of-core computation and enables data scientists to process hundred millions of examples on a desktop ~\cite{kdnuggets_analytics_big_data_data_mining_and_data_science}. These were the main key features in choosing and testing XGBoost. 
+
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                            % Subsection/ {LGBM (Light Gradient Boosting Model)
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{LGBM- Light Gradient Boosting Model} 
+Light GBM is a very high performing gradient boosting framework uses tree based learning algorithms that can be used for predictions, classifictions, ranking and many other machine learning tasks ~\cite{lightgbm_documentation}. The main advantages of Lgbm is that it has a high efficiency compared to other boosting algorithms and the training speed is even faster than XGBoost. A lot of boosting tools utilize pre-sort-based algorithms (it is the default algorithm in XGBoost) for decision tree learning ~\cite{mehta1996sliq}. Although it is a simple solution, it can not be optimized easily ~\cite{lightgbm_documentation}. According to LGBM documentation, LGBM uses a different approach (histogram based algorithms) in which the continuous feature values are bucket into discrete bins ~\cite{lightgbm_documentation}. This reduces the memory usage and makes
+
+
+
+which bucket continuous feature (attribute) values into discrete bins. This speeds up training and reduces memory usage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Preprocessing And Exploratory Data Analysis
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Data Preprocessing And Exploratory Data Analysis}
+
+
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                    % Subsection/ Data Cleaning Methods
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Data Cleaning Methods}
+For the data preprocessing, missing values were checked first and there was no missing values found. However, the proportion of the data imbalance found was significant with 89.95\% (179,902 samples) of the target label in the train.csv were classified as 0 as compared to 10.05\% of the data labeled as 1 (20,098 samples). This means that there are two options that should be considered, either up-sample minority class or down-sample majority class. Most cases, down sampling is the optimal option, however, there are some cases were upsampling gives an optimal results over the downsampling depending on the type and size of the dataset. Another options (besides up and downsampling) are either changing the perfomance metrics or penalize algorithms (Cost-Sensitive Training). As far as this project is concerned, both upsampling and downsampling were performed to compare the results. Lastly, the data was normalized using z-score normalization. Even though not all models need a normalized data (such as XGBoost and LGBM), normalizing for all models helps in making a fair evaluation and comparison of the performances of those models. 
+
+                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                    % Subsection/ Dimensionality Reduction
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Dimensionality Reduction}
+Linear correlation between the features were checked first. Those identified relationship should be removed during feature selection as they effect some of the models such linear regression. However, for this specific dataset it was found that all 200 features had a correlation coefficient value between -0.1 and 0.1, which indicates that there is no linear relationship between those 200 features. The heatmap (figure~\ref{fig:fig1}) below shows the results of correlation in which it can be observed that it is almost zero. 
 \begin{figure}[h!]
   \centering
   \includegraphics[width=3.6in]{project/code/heatmap.png}
@@ -81,14 +193,23 @@ The first part of the EDA was checking for linear correlation between the featur
   \label{fig:fig1}
 \end{figure}
 
-Since there are 200 features, it is a bit difficult to plot histograms and box plots for all those features, however, to make the task easier, PCA was first used reduce the dimensionality. When running the PCA (figure~\ref{fig:fig2} below), it can be observed that almost all of the 200 features are required to explain 95\% of the variance. Examining the PCA plot, it is possible that the provider of the dataset already have done some preprocessing techniques, PCA possibly. 
+Since there are 200 features, plotting and examining histograms and box plots for all those features becomes a bit of difficult task. However, to make it easier, PCA was first used to identify any opportunity for reducing the dimensionality of the data. When running the PCA (figure~\ref{fig:fig2} below), it can be observed that almost all of the 200 features are required to explain 95\% of the variance. Examining the PCA plot, it is possible that the provider of the dataset already have done some preprocessing techniques, PCA possibly. 
 \begin{figure}[h!]
   \centering
   \includegraphics[width=3.6in]{project/code/1-pcafeatures.png}
   \caption{PCA}
   \label{fig:fig2}
 \end{figure}
-Next thing was to build a simple random forest model to extract important features and possibly providing more insights to the dataset. Doing this reduce the amount of time examining all the 200 features and only focus on those top 10 features. GridSearch was used to for finding the best parameters for the random forest. Figure~\ref{fig:fig3} below shows the top 10 features returned from the random forest model. 
+From the results above, it can be concluded that dimensionality reduction technique is not desirable in this defined problem set.
+
+                    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                    % Subsection/ Examining and Comparing Training
+                    %       and Test set provided by the Competition
+                    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Examining and Comparing Training and Test set provided by the Competition}
+
+Next thing was to build a simple random forest model to extract important features and possibly providing more insights to the dataset. The reasoning behind this is to reduce the amount of time examining all the 200 features and only focus on those top 10 features. GridSearch was used to for finding the best parameters for the random forest. Figure~\ref{fig:fig3} below shows the top 10 features returned from the random forest model. 
 \begin{figure}[h!]
   \centering
   \includegraphics[width=3.6in]{project/code/important features.png}
@@ -100,41 +221,111 @@ Histograms were plotted for those top features as shown in figure~\ref{fig:fig4}
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=3.1in]{"project/code/Histograms dist. of features".png}
+  \includegraphics[width=3.1in]{project/code/Histograms-dist-of-features.png}
   \caption{Histograms for the top 2 features}
   \label{fig:fig4}
 \end{figure}
 
 
-The orange distribution is for the varaible in the train dataset and the green one corresponds to the same variable in the test dataset. Comparing those features from the train and the test sets gives an insight about the scoring for test set. More specifically, the test data does not have target so this means that prediction has to be formatted into csv file and submitted online for AUC-ROC score. However, what this distributions shows is that the train and test sets are almost similar in the distribution which means that it is possible to split the train.csv data in test and train and the cross validation (CV) score obtained in the local machine should be approximately similar to the AUC-ROC score obtained when submitted online. This give a way around the limitation of having 3 submissions a day by evaluating the model performance in the local machine using the CV score. 
+The orange distribution is for the variable in the train dataset and the green one corresponds to the same variable in the test dataset. Comparing those features from the train and the test sets gives a conclusion can be drawn regarding the scoring for test set. More specifically, the test data does not have target so this means that prediction has to be formatted into csv file and submitted online for AUC-ROC score. However, what this distributions shows is that the train and test sets are almost similar in the distribution which means that it is possible to split the train.csv data in test and train and the cross validation (CV) score obtained in the local machine should be approximately similar to the AUC-ROC score obtained when submitted online. This give a way around the limitation of having 3 submissions a day by evaluating the model performance in the local machine using the CV score. 
+
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                            % Subsection/ Challenges in the Dataset
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Challenges in the Dataset}
+
+There are several challenges in the dataset that needed to be overcome before analyzing the dataset. First, the fully anonymized  features is one of the most significant challenges in the current dataset.  Another challenge is the imbalance in the data since one of the class, which is 89.5\% of the data, is larger than the other class of 10.5\%.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Implementation and Setup
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Implementation and Setup}
 
 
 
-\section{Used Methods in the Project}
-As stated earlier, benchmark models were first created. The first two models considered here were naive bayes and logistic regression. The reason behind the choice is because these two models are simple to implement as they have a minimal number of hyper-parameters tuning. The next two models considered where XGBoost and LGBM which are tree based learning algorithms. More high level explanation of these models is followed.  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Results and Discussion
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Results and Discussion}
+The results of the methods outlined in methodology are described in this section. Overall, the four initial models performed decently well. 
 
-\subsection{Naive Bayes classifier}
-It is a probabilistic machine learning model based on the Bayes theorem with an assumption of independence among the features. Main advantage of this model is that it can be easily trained on small datasets. Although the dataset used in this project is somewhat large, it was downsampled (more explanation will be followed in the later section). Also, the data size was reduced further when splitting the downsampled data into train and test. Both of these helped in providing the initial setup of having a good performing naive bayes model. 
+\subsection{Baseline Models}
 
-\subsection{Logistic Regression}
-Logistic regression is a regression analysis that can be used for predictions when the target variable is dichotomous (binary). It is used to describe data and to explain the relationship between one dependent binary variable and one or more nominal, ordinal, interval or ratio-level independent variables [reference: https://www.statisticssolutions.com/what-is-logistic-regression/].
+Four baseline models were evaluated to determine which methods perform well on the dataset. The four classifiers trained were Naive Bayes, Logistic Regression, XGBoost and LightGBM as outlined in the methodology section. In order to benchmark each model all the classifiers were trained on a subset of the provided "train.csv". The data was first down-sampled to allow for each representation of both labels. The inputs to the classifiers were also normalized using z-score. The hyper-parameters for each model were tuned using Bayesian cross validation. 
 
-\subsection{Boosting Algorithms}
-In order to understand XGBoost and lgbm, the term gradient descent and gradient boosting must be understood first. Starting with gradient descent, it uses a cost function to measure how close the predicted values are to the actual values. It is desirable to have as little difference as possible between the predicted values and the actual values, other words, minimizing the cost function. This is done by associating weights with the trained models, therefore, the better weights associated with the model, the more accurate predicted outcome are and the cost function will be lower as well. Gradient Descent is an iterative optimization algorithm in which these associated weights are learned and then updated to minimize the cost function. \\
-On the other hand, gradient boosting combines the principle of gradient descent and boosting to a supervised learning models(ref: https://www.kdnuggets.com/2017/10/xgboost-concise-technical-overview.html). The idea of boosting is that a set of an ensemble of weak learners built where the wrongly predicted records are given a higher weights (boosted) so that the next model will pay more attention to those misclassifed labels and will try to correctly predict them. This technique converts a group of week learners into a single strong learner. Both XGBoost and LGBM are tree based models in which they take gradient boosting into higher level by adding more functionalities to have a greater performance and higher speed. 
+The Naive Bayes algorithm was tuned over 100 iterations using Bayesian search and had only one hyper-parameter, "var-smoothing". The utility script developed ran the iterations and evaluated the performance of the best performing parameters in the search. Figure~\ref{fig:prelim-NB} shows the result of the preliminary model showing the Receiver Operating Characteristics Area Under The Curve (AUC\_ROC), precision-recall (PR) curve, and the resulting confusion matrix with classification report. 
 
-\\
+The classifier performed well with a macro average f1-score of 0.81. The AUC\_ROC curve had an area of 0.88 and indicates that the classifier has a decent amount of separation between the class labels. The PR curve is generally more representative of performance when evaluating against a dataset with imbalanced class labels. The recall values presented in the classification report indicate that the model generalized well and did not bias predictions to one class over the other.
 
-\subsubsection{XGBOOST (eXtreme Gradient Boosting)}
-XGBoost is a library for developing fast and high performance gradient boosting tree models and can be used a standalone predictor. It is an advanced implementation of the gradient boosting algorithms. The main key features of XGBoost is scalability, which drives fast learning through parallel and distributed computing and offers efficient memory usage (ref: https://www.analyticsvidhya.com/blog/2018/09/an-end-to-end-guide-to-understand-the-math-behind-xgboost/). There are several systems and algorithmic optimizations made on the XGBoost that made the scalability feature possible. This includes: a novel tree learning algorithm is for handling sparse data and a theoretically justified weighted quantile sketch procedure enables handling instance weights in approximate tree learning (reference: ). XGBoost enables parallel and distributed computing which makes learning faster which enables quicker model exploration (reference: ). More importantly, XGBoost take advantage of out-of-core computation and enables data scientists to process hundred millions of examples on a desktop (reference: ). 
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=3.6in]{project/code/preliminary-naivebayes-downsampled.png}
+  \caption{Baseline model performance for Naive Bayes classifier}
+  \label{fig:prelim-NB}
+\end{figure}
+
+The second model evaluated was a Logistic Regression classifier. Again the model was tuned using the Bayesian cross-validation technique. Two hyper-parameters were searched for: "C" or the inverse regularization term and solver. After 100 iterations, the optimal values found were C at $1.05e^{-4}$ \expnumber{1.05}{-4} using the "saga" solver. Figure~\ref{fig:prelim-logreg} displays the same performance metrics as before. The logistic regression model performed slightly worse than the Naive Bayes classifier with a macro f1-score of 0.77 and AUC\_ROC of 0.85. 
+
+The last two models were both random forest implementations using gradient boosting, one using the XGBoost implementation and the other using LightGBM. Due to the increases computational demand the cross validation for each of these methods was only done over 20 iterations. It is difficult to know if the paramters searched were optimal, however, the performance of the two models were similar to the benchmarks provided by Naive Bayes and Logistic Regression.
+
+The LightGBM model performed almost equivalently to XGBoost as seen in the performance results shown in Figure~\ref{fig:prelim-lgbm} and Figure~\ref{fig:prelim-xgboost} respectively. XGBoost had an AUC\_ROC score of 0.89 and f1-macro average of 0.77 while LightBGM had an AUC\_ROC of 0.88 with f1-macro of 0.80.
+
+These results served as a starting point to conduct additional investigations to try and improve performance of the model on the submission dataset. While the models results were similar, a lot factors contribute to a model's performance. It is possible that the under sampled data used to train the random forest classifiers did not have enough samples to allow the model to generalize to the submission dataset optimally. It was also possible that the parameters tuned need to be manually adjusted or searched over a larger parameter space.
+
+\subsection{Improving Baseline Models}
+\subsubsection{Up-sampling using SMOTE}
+To test the theory that increased data samples could allow certain models to generalize more effectively we trained the baseline models once again using the parameters found initially. We kept all constants the same except the inputs to the models. The results of the trial can be seen in Table~\ref{table:tab2}. None of the classifiers performed better using the up-sampled data and XGBoost and Naive Bayes in particular resulted in no ability to distinguish class label. There are could be a few reasons for this result, first, the up-sampling techniques could have made new data points with too much similarity to the original samples. This would cause the models to over-fit the training data and lose separation between the class labels. Second, the models were trained using the hyper-parameters found in the baseline model benchmark using the down-sampled data, it is possible that these hyper-parameters are not optimal for the training input. Lastly, the method by which the samples were duplicated could have been inappropriate for the data. K-nearest neighbours was used to create the new samples, modifications to the value of K were not explored but could have altered the results obtained.
+
+\begin{table}
+\begin{tabular}{|{2.1cm}||p{2.1cm}|p{2.1cm} | }
+\hline
+\multicolumn{3}{|c|}{Baseline Models Up-sampling vs Down-sampling} \\
+\hline
+Classifier & SMOTE Up-sampled AUC\_ROC & Down-Sampled AUC\_ROC\\
+\hline
+Naive Bayes         & 0.50 & 0.88 \\
+Logistic Regression & 0.68 & 0.85 \\
+XGBoost             & 0.50 & 0.89 \\
+LightGBM            & 0.70 & 0.88 \\
+\hline
+\end{tabular}
+\caption{Baseline model performance on Up-sampled vs Down-sampled data}
+\label{table:tab2}
+\end{table}
+
+\subsubsection{Ensembling Baseline Models}
+Another attempt to improve the accuracy from the initial benchmark obtained with the baseline models was to ensemble the four classifiers together. Two simple methods were attempted: averaging and voting. Overall, no improvement or degradation was seen using the ensembled classifiers. This inconclusive results do not mean the technique is not applicable, however, adjustments would have to be made to better use this strategy. 
+
+The four classifiers may be predicting samples similarly and have a similar probability distribution of the predictions. In this case, new insights would not be available from ensembling because each of the individual distributions overlap. This could change as better hyper-parameters are found or if new features are designed and model accuracies improve. Individual models would ideally be better at predicting certain samples than others and an improved ensembling architecture could take advantage this characteristic.
+
+\subsection{Extensive Hyper-Parameter Tuning for the LightGBM Model}
+Here we present the results of an extensive hyper-parameter search over the LightGBM's parameter space. Since the previous attempts did not yield favourable results, focus was placed primarily on a single model implementation of LightGBM. LightGBM has the advantage of training models quicker than XGBoost however, it requires more data to be successful. LightGBM has a built in parameter flag named "is\_balanced" that can be used compensate for unbalanced datasets.
+
+An in depth Bayesian hyper-parameter search was performed using the full dataset. The search iterated over 700 possible hyper parameter configurations. Twelve key parameters were searched chosen according to recommendations found in the LightGBM documentation~\cite{lightgbm_documentation}. These parameters are:
+\begin{itemize}
+\item min_sum_hessian_in_leaf
+\item bagging_fraction
+\item bagging_freq
+\item min_gain_to_split
+\item boosting_type
+\item num_leaves
+\item learning_rate
+\item subsample_for_bin
+\item min_child_samples
+\item lambda_l1
+\item lambda_l2
+\item feature_fraction
+\end{itemize}
 
 
 
-\subsubsection{LGBM}
 
 
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CONCLUSION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Conclusion}
 A conclusion section is not required. Although a conclusion may review the 
@@ -147,12 +338,37 @@ IEEE Xplore\textregistered\ at no charge, \underline{http://graphicsqc.ieee.org/
 
 Appendixes, if needed, appear before the acknowledgment.
 
+
+\clearpage{}
+\section{Preliminary Model Results}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=3.1in]{project/code/preliminary-logregression-downsampled_f1score.png}
+  \caption{Baseline model performance for Logistic Regression classifier}
+  \label{fig:prelim-logreg}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=3.1in]{project/code/preliminary-xgboost-downsampled.png}
+  \caption{Baseline model performance for XGBoost classifier}
+  \label{fig:prelim-xgboost}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=3.1in]{project/code/preliminary-lightGBM-downsampled.png}
+  \caption{Baseline model performance for LightGBM classifier}
+  \label{fig:prelim-lgbm}
+\end{figure}
+
+
 \section*{Acknowledgment}
 
 
 
-\section*{References and Footnotes}
 
+\section*{References and Footnotes}
 \subsection{References}
 
 \nocite{*}
@@ -188,9 +404,6 @@ Appendixes, if needed, appear before the acknowledgment.
 
 
 % \end{thebibliography}
-
-
-
 
 
 
