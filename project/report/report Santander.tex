@@ -12,7 +12,7 @@
 \markboth{\journalname, VOL. XX, NO. XX, XXXX 2017}
 {Author \MakeLowercase{\textit{et al.}}: Preparation of Papers for IEEE TRANSACTIONS and JOURNALS (February 2017)}
 \begin{document}
-\title{Santander Customer Transaction Prediction (March 2019)}\\
+\title{Santander Customer Transaction Prediction (March 2019)} \\
 
 \author{Adam Kulas, Ammar Ahmed, and Richard Ozara\\
 \institute University of Waterloo,ON N2L 3G1, Canada\\akulas@uwaterloo.ca\\
@@ -39,7 +39,7 @@ Binary classification, Ensembling, gradient boosting, Machine learning, Naive Ba
 \label{sec:introduction}
 \IEEEPARstart{T}{he} purpose of this project is to solve a problem presented by the company Santander. Santander is a bank that is originating in Spain. Since 2013 they have been serving customers in northeastern North America. Santander mentions in the competition description that their most common problems are binary classification problems. The main goal for the competition is to predict which customers will make a specific transaction in the future, irrespective of money transacted. The problem presented by this challenge is a binary classification problem. The challenge is hosted on Kaggle.com where competitors submit their predicted results online and are evaluated on area under the (ROC) curve between the predicted probability and the observed target. The approach followed in this paper started with data preprocessing and then to data exploration and visualization. After that, a simple random forest model was created to set a baseline performance bench-mark and to help with extracting important features as part of the exploratory data analysis (EDA). Then, implemented supervised machine learning classffication algorithms such as naive bayes and logistic regression that were more specifically tailored to the dataset and problem space. Lastly, a more advanced models were tested such XGBoost and LGBM which required a lot of exploring and tuning their hyperparamters. Also, techniques such ensembling models were tested and all results were compared and evaluated. Throughout the process of testing those models, cross-validation CV was performed and cross-referenced with kaggle leader board scores.
 
-\subsection{Abbreviations and Acronyms}
+\subsection{Abbreviations and Acronyms}\\
 CV score = Cross Validation score \\
 XGBoost = Extreme Gradient Boosting  \\
 LGBM = Light Gradient Boosting Model \\
@@ -55,8 +55,8 @@ SMOTE = Synthetic Minority Oversampling Technique
 \section{Description of the data}
 The dataset used in this project is provided by Santander and can be downloaded from kaggle.com. There are two main files: train.csv which contains the training set and the test.csv which contains the test set. The size of the train.csv is 200k x 201 (40,200,000 data points) and for the tain.csv is 200k x 202 (40,000,000 data points). The train.csv has the attributes: binary target column, string ID\_code column, and the numeric feature variables (var0 till var 199) while the test.csv contains the string ID\_code and the numeric feature variables, so the task is to predict the value of target column in the test set. 
 
-\\
-\\
+
+\leavevmode\\
 move to another section
 The datasets are fully anonymized. Test labels (target) is private - predicted results must be submitted online and submissions are evaluated on area under the ROC curve between theDownload
 
@@ -87,26 +87,6 @@ In general, the motivation for using an Bayesian optimizer is to optimize the mo
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Proposed Strategy/Methodology}
 In order to develop a model and strategy that would perform well on the competition's data-set, a standard data science work flow was adopted. Multiple steps are common in the process of solving similar problems ~\cite{tandel_2017}. These steps include: data cleaning, data exploration, initial models, feature engineering, and hyper-parameters tuning. It is important to mention that these steps are not immutable and change depending on the problem definition.
-
-\tikzstyle{process} = [rectangle, minimum width=-0.5cm, minimum height=1cm,text centered,text width=2cm, draw=black, fill=orange!30]
-\tikzstyle{arrow} = [thick,->,>=stealth]
-\begin{tikzpicture}[node distance=2cm]
-\node (1) [process] {Sourcing Data};
-\node (2) [process, below of= 1] {Preprocessing}
-\node (3) [process, below of= 2] {EDA}
-\node (4) [process, below of= 3] {Feature Engineering}
-\node (5) [process, below of= 4] {Classification}
-\node (6) [process, below of= 5] {Evaluation}
-
-\draw [arrow] (1) -- (2)
-\draw [arrow] (2) -- (3)
-\draw [arrow] (3) -- (4)
-\draw [arrow] (4) -- (5)
-\draw [arrow] (5) -- (6)
-
-\end{tikzpicture}
-
-In this project, we setup premilinary models by  classifying the data using different machine-learning algorithms to predict which customer makes a transaction. This results forms our benchmark on which 
 
 
 
@@ -162,11 +142,7 @@ XGBoost is a library for developing fast and high performance gradient boosting 
                             % Subsection/ {LGBM (Light Gradient Boosting Model)
                         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{LGBM- Light Gradient Boosting Model} 
-Light GBM is a very high performing gradient boosting framework uses tree based learning algorithms that can be used for predictions, classifictions, ranking and many other machine learning tasks ~\cite{lightgbm_documentation}. The main advantages of Lgbm is that it has a high efficiency compared to other boosting algorithms and the training speed is even faster than XGBoost. A lot of boosting tools utilize pre-sort-based algorithms (it is the default algorithm in XGBoost) for decision tree learning ~\cite{mehta1996sliq}. Although it is a simple solution, it can not be optimized easily ~\cite{lightgbm_documentation}. According to LGBM documentation, LGBM uses a different approach (histogram based algorithms) in which the continuous feature values are bucket into discrete bins ~\cite{lightgbm_documentation}. This reduces the memory usage and makes
-
-
-
-which bucket continuous feature (attribute) values into discrete bins. This speeds up training and reduces memory usage
+Light GBM is a very high performing gradient boosting framework uses tree based learning algorithms that can be used for predictions, classifictions, ranking and many other machine learning tasks ~\cite{lightgbm_documentation}. The main advantages of Lgbm is that it has a high efficiency compared to other boosting algorithms and the training speed is even faster than XGBoost. A lot of boosting tools utilize pre-sort-based algorithms (it is the default algorithm in XGBoost) for decision tree learning ~\cite{mehta1996sliq}. Although it is a simple solution, it can not be optimized easily ~\cite{lightgbm_documentation}. According to LGBM documentation, LGBM uses a different approach (histogram based algorithms) in which the continuous feature values are bucket into discrete bins ~\cite{lightgbm_documentation}. This reduces the memory usage and speeds up the training of the model ~\cite{lightgbm_documentation}. 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -222,7 +198,7 @@ Histograms were plotted for those top features as shown in figure~\ref{fig:fig4}
 \begin{figure}[h!]
   \centering
   \includegraphics[width=3.1in]{project/code/Histograms-dist-of-features.png}
-  \caption{Histograms for the top 2 features}
+  \caption{Histograms for the top 10 features}
   \label{fig:fig4}
 \end{figure}
 
@@ -278,7 +254,7 @@ These results served as a starting point to conduct additional investigations to
 To test the theory that increased data samples could allow certain models to generalize more effectively we trained the baseline models once again using the parameters found initially. We kept all constants the same except the inputs to the models. The results of the trial can be seen in Table~\ref{table:tab2}. None of the classifiers performed better using the up-sampled data and XGBoost and Naive Bayes in particular resulted in no ability to distinguish class label. There are could be a few reasons for this result, first, the up-sampling techniques could have made new data points with too much similarity to the original samples. This would cause the models to over-fit the training data and lose separation between the class labels. Second, the models were trained using the hyper-parameters found in the baseline model benchmark using the down-sampled data, it is possible that these hyper-parameters are not optimal for the training input. Lastly, the method by which the samples were duplicated could have been inappropriate for the data. K-nearest neighbours was used to create the new samples, modifications to the value of K were not explored but could have altered the results obtained.
 
 \begin{table}
-\begin{tabular}{|{2.1cm}||p{2.1cm}|p{2.1cm} | }
+\begin{tabular}{|{2.1cm}||p{2.1cm}|p{2.1cm}}
 \hline
 \multicolumn{3}{|c|}{Baseline Models Up-sampling vs Down-sampling} \\
 \hline
@@ -302,24 +278,32 @@ The four classifiers may be predicting samples similarly and have a similar prob
 \subsection{Extensive Hyper-Parameter Tuning for the LightGBM Model}
 Here we present the results of an extensive hyper-parameter search over the LightGBM's parameter space. Since the previous attempts did not yield favourable results, focus was placed primarily on a single model implementation of LightGBM. LightGBM has the advantage of training models quicker than XGBoost however, it requires more data to be successful. LightGBM has a built in parameter flag named "is\_balanced" that can be used compensate for unbalanced datasets.
 
-An in depth Bayesian hyper-parameter search was performed using the full dataset. The search iterated over 700 possible hyper parameter configurations. Twelve key parameters were searched chosen according to recommendations found in the LightGBM documentation~\cite{lightgbm_documentation}. These parameters are:
+An in depth Bayesian hyper-parameter search was performed using the full dataset. The search iterated over 700 possible hyper parameter configurations over multiple days. Twelve key parameters were searched chosen according to recommendations found in the LightGBM documentation~\cite{lightgbm_documentation}. These parameters are:
 \begin{itemize}
-\item min_sum_hessian_in_leaf
-\item bagging_fraction
-\item bagging_freq
-\item min_gain_to_split
-\item boosting_type
-\item num_leaves
-\item learning_rate
-\item subsample_for_bin
-\item min_child_samples
-\item lambda_l1
-\item lambda_l2
-\item feature_fraction
+\item min\_sum\_hessian\_in\_leaf
+\item bagging\_fraction
+\item bagging\_freq
+\item min\_gain\_to\_split
+\item boosting\_type
+\item num\_leaves
+\item learning\_rate
+\item subsample\_for\_bin
+\item min\_child\_samples
+\item lambda\_l1
+\item lambda\_l2
+\item feature\_fraction
 \end{itemize}
 
+Number of leaves is an important parameter to tune when using LightGBM. Number of leaves controls the complexity of the model. The value must be large enough to learn the features of the data, but too many leaves could result in over fitting. Figure~\ref{fig:lgbmtuning_numleaves} shows a plot of the distribution of values tested for number of leaves during the hyper parameter search
 
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=3.6in]{project/code/results/num-leaves-distplot.png}
+  \caption{Distribution of search values for "num\_leaves" parameter}
+  \label{fig:lgbmtuning_numleaves}
+\end{figure}
 
+We can see that the Bayesian search is selecting values that differ from the sample distribution but have a higher likelihood of improving performance. After the search was completed and the optimal parameters were tuned the model performed better than all baseline models. The tuned LGBM model resulted in an AUC\_ROC score of 0.896. The train time for the model with optimal parameters was 300 seconds and contained 5001 estimators. This model was then used to evaluate the submission dataset and returned a result of 0.898 on the Kaggle leaderboard.
 
 
 
@@ -333,6 +317,7 @@ main points of the paper, do not replicate the abstract as the conclusion. A
 conclusion might elaborate on the importance of the work or suggest 
 applications and extensions. 
 IEEE Xplore\textregistered\ at no charge, \underline{http://graphicsqc.ieee.org/}, allows authors to 
+
 
 \appendices
 
@@ -365,45 +350,12 @@ Appendixes, if needed, appear before the acknowledgment.
 
 \section*{Acknowledgment}
 
-
-
-
 \section*{References and Footnotes}
 \subsection{References}
 
 \nocite{*}
 \bibliographystyle{IEEEtran}
 \bibliography{ref}
-
-
-% \begin{thebibliography}{00}
-
-% \bibitem{b1} G. O. Young, ``Synthetic structure of industrial plastics,'' in \emph{Plastics,} 2\textsuperscript{nd} ed., vol. 3, J. Peters, Ed. New York, NY, USA: McGraw-Hill, 1964, pp. 15--64.
-
-% \bibitem{b2} W.-K. Chen, \emph{Linear Networks and Systems.} Belmont, CA, USA: Wadsworth, 1993, pp. 123--135.
-
-% \bibitem{b3} J. U. Duncombe, ``Infrared navigation---Part I: An assessment of feasibility,'' \emph{IEEE Trans. Electron Devices}, vol. ED-11, no. 1, pp. 34--39, Jan. 1959, 10.1109/TED.2016.2628402.
-
-% \bibitem{b4} E. P. Wigner, ``Theory of traveling-wave optical laser,'' \emph{Phys. Rev}., vol. 134, pp. A635--A646, Dec. 1965.
-
-% \bibitem{b5} E. H. Miller, ``A note on reflector arrays,'' \emph{IEEE Trans. Antennas Propagat}., to be published.
-
-% \bibitem{b6} E. E. Reber, R. L. Michell, and C. J. Carter, ``Oxygen absorption in the earth's atmosphere,'' Aerospace Corp., Los Angeles, CA, USA, Tech. Rep. TR-0200 (4230-46)-3, Nov. 1988.
-
-% \bibitem{b7} J. H. Davis and J. R. Cogdell, ``Calibration program for the 16-foot antenna,'' Elect. Eng. Res. Lab., Univ. Texas, Austin, TX, USA, Tech. Memo. NGL-006-69-3, Nov. 15, 1987.
-
-% \bibitem{b8} \emph{Transmission Systems for Communications}, 3\textsuperscript{rd} ed., Western Electric Co., Winston-Salem, NC, USA, 1985, pp. 44--60.
-
-% \bibitem{b9} \emph{Motorola Semiconductor Data Manual}, Motorola Semiconductor Products Inc., Phoenix, AZ, USA, 1989.
-
-% \bibitem{b10} G. O. Young, ``Synthetic structure of industrial
-% plastics,'' in Plastics, vol. 3, Polymers of Hexadromicon, J. Peters,
-% Ed., 2\textsuperscript{nd} ed. New York, NY, USA: McGraw-Hill, 1964, pp. 15-64.
-% [Online]. Available:
-% \underline{http://www.bookref.com}.
-
-
-% \end{thebibliography}
 
 
 
